@@ -1,6 +1,7 @@
 # Some Basic Components from which all other components can derive
 import pygame as pg
 import Data.ResourceManager as resources
+import numpy as np
 
 
 class BaseSprite(pg.sprite.Sprite):
@@ -20,6 +21,9 @@ class BaseSprite(pg.sprite.Sprite):
         return (self.exact_position[0] - self.old_position[0],
                 self.exact_position[1] - self.old_position[1])
 
+    def set_position(self):
+        pass
+
     def reset_position(self, value, attribute="topleft"):
         """
         Set the sprite's location variables to a new point.  The attribute
@@ -36,30 +40,37 @@ class BaseSprite(pg.sprite.Sprite):
 
 class Rigidbody(object):
     def __init__(self):
-        self.acceleration = (0, 0)
-        self.velocity = (0, 0)
-        self.position = (0, 0)
-
-    def get_position(self):
-        return self.position
+        self.acceleration = [0, 0]
+        self.velocity = [0, 0]
+        self.worldPosition = [0.0, 0.0]
 
     def add_force(self, force):
-        self.velocity += force
+        print("Adding force: " + str(force))
+        self.velocity = np.add(self.velocity, force)
+        print("current velocity: " + str(self.velocity))
 
     def update(self):
-        dt = pg.time.Clock.get_time()
-        self.velocity += self.acceleration * dt
-        self.position += self.velocity * dt
+        dt = pg.time.Clock().get_time()
+        self.velocity = np.add(self.velocity, self.acceleration)
+        self.worldPosition = np.add(self.worldPosition, self.velocity)
 
 
 class GameObject(BaseSprite):
     def __init__(self, folder, name, pos=(0, 0), size=(1, 1), *groups):
         self.image = resources.GFX[folder][name]
+        self.position = pos
         BaseSprite.__init__(self, pos, self.image.get_size(), *groups)
+        self.keys = []
 
     def update(self):
         pass
 
     def draw(self, surface):
-        BaseSprite.reset_position(self.position)
-        BaseSprite.draw(surface)
+        BaseSprite.reset_position(self, self.position)
+        BaseSprite.draw(self, surface)
+
+    def get_event(self, event):
+        pass
+
+    def get_key(self, receivedKeys):
+        self.keys = receivedKeys

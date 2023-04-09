@@ -1,6 +1,8 @@
 import Data.Utils.ParentComponents as pc
+from Data.Utils import Tools
 import Data.ResourceManager as resources
 import pygame as pg
+import numpy as np
 
 
 class Player(pc.GameObject, pc.Rigidbody):
@@ -9,15 +11,21 @@ class Player(pc.GameObject, pc.Rigidbody):
         pc.GameObject.__init__(self, "Misc", "Heart", pos, (1, 1))
         self.position = pos
 
-    def update(self):
+    def update(self, now):
         pc.GameObject.update(self)
         pc.Rigidbody.update(self)
-        self.position = pc.Rigidbody.get_position(self)
+        self.position = self.worldPosition
 
     def draw(self, surface):
         pc.GameObject.draw(self, surface)
 
-    def get_event(self, event):
-        if event == pg.K_w:
-            pc.Rigidbody.add_force(self, resources.DIRECT_DICT["front"])
-
+    def get_key(self, receivedKeys):
+        self.keys = receivedKeys
+        if self.keys[pg.K_w]:
+            self.velocity = np.array(resources.DIRECT_DICT["front"])
+        elif self.keys[pg.K_s]:
+            self.velocity = np.array(resources.DIRECT_DICT["back"])
+        elif self.keys[pg.K_d]:
+            self.velocity = np.array(resources.DIRECT_DICT["right"])
+        elif self.keys[pg.K_a]:
+            self.velocity = np.array(resources.DIRECT_DICT["left"])

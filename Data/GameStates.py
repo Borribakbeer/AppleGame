@@ -1,5 +1,6 @@
 import pygame as pg
 from .Utils import state_machine
+from .Utils import Tools
 from .StateBuilders import MainMenuBuilder
 from . import ResourceManager
 from .Components import player
@@ -112,15 +113,16 @@ class MainMenu(state_machine.State):
 class Game(state_machine.State):
     def __init__(self):
         state_machine.State.__init__(self)
+        self.elements = self.make_elements()
+        self.keys = []
 
     def startup(self, now, persistant):
         self.persist = persistant
         self.start_time = now
-        self.elements = self.make_elements()
 
     def make_elements(self):
-        group = pg.sprite.LayeredUpdates()
-        group.add(player.Player((100,100)), layer=1)
+        group = Tools.GameObjectsCollection()
+        group.add(player.Player((100, 100)))
         return group
 
     def update(self, keys, now):
@@ -132,8 +134,13 @@ class Game(state_machine.State):
         self.elements.draw(surface)
 
     def get_event(self, event):
-        self.elements.get_event()
-        """
-        Get events from Control.  Currently changes to next state on any key
-        press.
-        """
+        self.elements.get_event(event)
+        if event.type == pg.KEYDOWN:
+            self.keys = pg.key.get_pressed()
+            self.elements.get_keys(self.keys)
+        elif event.type == pg.KEYUP:
+            self.keys = pg.key.get_pressed()
+            self.elements.get_keys(self.keys)
+
+
+

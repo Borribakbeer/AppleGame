@@ -3,6 +3,34 @@ import os
 import pygame as pg
 
 
+# Manage Objects
+class GameObjectsCollection(object):
+    def __init__(self):
+        self.objects = []
+
+    def add(self, obj):
+        self.objects.append(obj)
+
+    def remove(self, objToRemove):
+        self.objects.remove(objToRemove)
+
+    def update(self, now):
+        for obj in self.objects:
+            obj.update(now)
+
+    def draw(self, surface):
+        for obj in self.objects:
+            obj.draw(surface)
+
+    def get_event(self, event):
+        for obj in self.objects:
+            obj.get_event(event)
+
+    def get_keys(self, keys):
+        for obj in self.objects:
+            obj.get_key(keys)
+
+
 # [<<<Manage Resource Loading...>>>]
 def load_all_gfx(path, tint=(255, 0, 255), accept=(".png", ".jpg")):
     """
@@ -37,3 +65,4 @@ def load_all_fonts(directory, accept=(".ttf",)):
         if ext.lower() in accept:
             fonts[name] = os.path.join(directory, font)
     return fonts
+
