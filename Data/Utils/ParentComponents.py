@@ -44,6 +44,9 @@ class Rigidbody(object):
         self.velocity = [0, 0]
         self.worldPosition = [0.0, 0.0]
 
+        # Possible tags are: "ALWAYS_RENDER"
+        self.tags = {}
+
     def add_force(self, force):
         print("Adding force: " + str(force))
         self.velocity = np.add(self.velocity, force)
@@ -57,6 +60,7 @@ class Rigidbody(object):
 
 class GameObject(BaseSprite):
     def __init__(self, folder, name, pos=(0, 0), size=(1, 1), *groups):
+        self.size = size
         self.image = resources.GFX[folder][name]
         self.position = pos
         BaseSprite.__init__(self, pos, self.image.get_size(), *groups)
