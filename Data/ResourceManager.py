@@ -34,16 +34,6 @@ DIRECT_DICT = {"front": (0, 1),
                "left": (-1, 0),
                "right": (1, 0)}
 
-OPPOSITE_DICT = {"front": "back",
-                 "back": "front",
-                 "left": "right",
-                 "right": "left"}
-
-DEFAULT_CONTROLS = {pg.K_w: "front",
-                    pg.K_s: "back",
-                    pg.K_a: "left",
-                    pg.K_d: "right"}
-
 # Draw layer order for all types of items.
 Z_ORDER = {"Background": -100,
            "Foreground": 100}

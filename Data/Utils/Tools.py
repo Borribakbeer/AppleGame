@@ -69,3 +69,7 @@ def load_all_fonts(directory, accept=(".ttf",)):
             fonts[name] = os.path.join(directory, font)
     return fonts
 
+
+def add_iterables(array1, array2):
+    for x in range(0, len(array1)):
+        array1[x] = array1[x] + array2[x]

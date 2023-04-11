@@ -1,5 +1,6 @@
 # Some Basic Components from which all other components can derive
 import pygame as pg
+import Data.Utils.Tools as tools
 import Data.ResourceManager as resources
 import numpy as np
 
@@ -24,14 +25,14 @@ class BaseSprite(pg.sprite.Sprite):
     def set_position(self):
         pass
 
-    def reset_position(self, value, attribute="topleft"):
+    def reset_position(self, value, attribute="center"):
         """
         Set the sprite's location variables to a new point.  The attribute
         argument can be specified to assign to a chosen attribute of the
         sprite's rect.
         """
         setattr(self.rect, attribute, tuple(value))
-        self.exact_position = list(self.rect.topleft)
+        self.exact_position = list(self.rect.center)
         self.old_position = self.exact_position[:]
 
     def draw(self, surface):
@@ -40,9 +41,9 @@ class BaseSprite(pg.sprite.Sprite):
 
 class Rigidbody(object):
     def __init__(self):
-        self.acceleration = [0, 0]
-        self.velocity = [0, 0]
-        self.worldPosition = [0.0, 0.0]
+        self.acceleration = np.array([0.0, 0.0])
+        self.velocity = np.array([0.0, 0.0])
+        self.worldPosition = np.array([0.0, 0.0])
 
         # Possible tags are: "ALWAYS_RENDER"
         self.tags = {}
@@ -54,8 +55,8 @@ class Rigidbody(object):
 
     def update(self):
         dt = pg.time.Clock().get_time()
-        self.velocity = np.add(self.velocity, self.acceleration)
-        self.worldPosition = np.add(self.worldPosition, self.velocity)
+        self.velocity = [self.velocity[x] + self.acceleration[x] for x in range(len(self.acceleration))]
+        self.worldPosition = [self.worldPosition[x] + (self.velocity[x]) for x in range(len(self.worldPosition))]
 
 
 class GameObject(BaseSprite):

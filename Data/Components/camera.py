@@ -32,7 +32,7 @@ class Camera(object):
         for obj in objects:
             direction = np.array(obj.screenposition) - np.array(self.position)
             dist = math.sqrt(direction[0] ** 2 + direction[1] ** 2)
-            if (dist < self.size + 5) or ("ALWAYS_RENDER" in obj.tags):
+            if (dist < self.size - 5) or ("ALWAYS_RENDER" in obj.tags):
                 drawableObjects.append(obj)
 
         return drawableObjects
@@ -41,12 +41,13 @@ class Camera(object):
         coords[0] = (coords[0] + 1) / 2.0
         coords[0] *= rc.SCREEN_SIZE[0]
         coords[1] = (coords[1] + 1) / 2.0
+        coords[1] = 1 - coords[1]
         coords[1] *= rc.SCREEN_SIZE[1]
         return coords
 
     def world_to_screen_space(self, coords):
         direction = np.array(coords) - self.position
-        direction[0] = direction[0] * (2.0 / self.size)
+        direction[0] = direction[0] * (2.0 / ((self.size * rc.SCREEN_SIZE[0]) / rc.SCREEN_SIZE[1]))
         direction[1] = direction[1] * (2.0 / self.size)
         screenPos = self.uv_to_screen_space(direction)
         return screenPos
