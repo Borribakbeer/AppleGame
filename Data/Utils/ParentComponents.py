@@ -30,7 +30,7 @@ class BaseSprite(pg.sprite.Sprite):
         argument can be specified to assign to a chosen attribute of the
         sprite's rect.
         """
-        setattr(self.rect, attribute, value)
+        setattr(self.rect, attribute, tuple(value))
         self.exact_position = list(self.rect.topleft)
         self.old_position = self.exact_position[:]
 
@@ -62,7 +62,7 @@ class GameObject(BaseSprite):
     def __init__(self, folder, name, pos=(0, 0), size=(1, 1), *groups):
         self.size = size
         self.image = resources.GFX[folder][name]
-        self.position = pos
+        self.screenposition = pos
         BaseSprite.__init__(self, pos, self.image.get_size(), *groups)
         self.keys = []
 
@@ -70,7 +70,7 @@ class GameObject(BaseSprite):
         pass
 
     def draw(self, surface):
-        BaseSprite.reset_position(self, self.position)
+        BaseSprite.reset_position(self, self.screenposition)
         BaseSprite.draw(self, surface)
 
     def get_event(self, event):

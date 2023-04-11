@@ -9,12 +9,12 @@ class Player(pc.GameObject, pc.Rigidbody):
     def __init__(self, pos):
         pc.Rigidbody.__init__(self)
         pc.GameObject.__init__(self, "Misc", "Heart", pos, (1, 1))
-        self.position = pos
+        self.screenposition = pos
 
     def update(self, now):
         pc.GameObject.update(self)
         pc.Rigidbody.update(self)
-        self.position = self.worldPosition
+        self.screenposition = self.worldPosition
 
     def draw(self, surface):
         pc.GameObject.draw(self, surface)

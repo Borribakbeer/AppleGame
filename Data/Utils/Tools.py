@@ -30,6 +30,9 @@ class GameObjectsCollection(object):
         for obj in self.objects:
             obj.get_key(keys)
 
+    def get_objects(self):
+        return self.objects
+
 
 # [<<<Manage Resource Loading...>>>]
 def load_all_gfx(path, tint=(255, 0, 255), accept=(".png", ".jpg")):

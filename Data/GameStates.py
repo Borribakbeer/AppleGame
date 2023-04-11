@@ -3,7 +3,7 @@ from .Utils import state_machine
 from .Utils import Tools
 from .StateBuilders import MainMenuBuilder
 from . import ResourceManager
-from .Components import player
+from .Components import player, camera
 
 TIME_PER_UPDATE = 16.0  # Milliseconds
 
@@ -114,6 +114,7 @@ class Game(state_machine.State):
     def __init__(self):
         state_machine.State.__init__(self)
         self.elements = self.make_elements()
+        self.camera = camera.Camera()
         self.keys = []
 
     def startup(self, now, persistant):
@@ -122,7 +123,7 @@ class Game(state_machine.State):
 
     def make_elements(self):
         group = Tools.GameObjectsCollection()
-        group.add(player.Player((100, 100)))
+        group.add(player.Player((0, 0)))
         return group
 
     def update(self, keys, now):
@@ -131,7 +132,8 @@ class Game(state_machine.State):
         self.elements.update(now)
 
     def draw(self, surface, interpolate):
-        self.elements.draw(surface)
+        self.camera.draw_frame(surface, self.elements)
+        # self.elements.draw(surface)
 
     def get_event(self, event):
         self.elements.get_event(event)
