@@ -1,3 +1,5 @@
+import pygame.math
+
 import Data.Utils.ParentComponents as pc
 from Data.Utils import Tools
 import Data.Stats.PlayerStats as PlayerData
@@ -8,14 +10,14 @@ import numpy as np
 
 class Player(pc.GameObject, pc.Rigidbody):
     def __init__(self, pos):
-        pc.Rigidbody.__init__(self)
+        pc.Rigidbody.__init__(self, pos)
         pc.GameObject.__init__(self, "Misc", "Heart", pos, (1, 1))
-        self.screenposition = pos
+        self.worldPosition = pos
+        self.screenposition = [0, 0]
 
     def update(self, now):
-        pc.GameObject.update(self)
+        pc.GameObject.update(self, now)
         pc.Rigidbody.update(self)
-        self.screenposition = self.worldPosition
 
     def draw(self, surface):
         pc.GameObject.draw(self, surface)

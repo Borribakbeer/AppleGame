@@ -1,4 +1,6 @@
 import pygame as pg
+
+import Data.Utils.ParentComponents
 from .Utils import state_machine
 from .Utils import Tools
 from .StateBuilders import MainMenuBuilder
@@ -113,7 +115,16 @@ class MainMenu(state_machine.State):
 class Game(state_machine.State):
     def __init__(self):
         state_machine.State.__init__(self)
-        self.elements = self.make_elements()
+        self.backgroundLayer = Tools.GameObjectsCollection()
+        self.defaultLayer = Tools.GameObjectsCollection()
+        self.foregroundLayer = Tools.GameObjectsCollection()
+        self.make_elements()
+
+        objs = self.backgroundLayer.get_objects() + self.defaultLayer.get_objects() + self.foregroundLayer.get_objects()
+        self.elements = Tools.GameObjectsCollection()
+        for obj in objs:
+            self.elements.add(obj)
+
         self.camera = camera.Camera()
         self.keys = []
 
@@ -122,17 +133,21 @@ class Game(state_machine.State):
         self.start_time = now
 
     def make_elements(self):
-        group = Tools.GameObjectsCollection()
-        group.add(player.Player((0, 0)))
-        return group
+        # Foreground
+        self.foregroundLayer.add(player.Player([3, 0]))
+        self.foregroundLayer.add(player.Player([0, 3]))
+        # Default
+        self.defaultLayer.add(Data.Utils.ParentComponents.GameObject("Debug", "Grid", [0, 0], [1, 1]))
+        # Background
 
     def update(self, keys, now):
-        """Updates the title screen."""
         self.now = now
         self.elements.update(now)
 
     def draw(self, surface, interpolate):
-        self.camera.draw_frame(surface, self.elements)
+        self.camera.draw_frame(surface, self.backgroundLayer)
+        self.camera.draw_frame(surface, self.defaultLayer)
+        self.camera.draw_frame(surface, self.foregroundLayer)
         # self.elements.draw(surface)
 
     def get_event(self, event):
@@ -140,9 +155,8 @@ class Game(state_machine.State):
         if event.type == pg.KEYDOWN:
             self.keys = pg.key.get_pressed()
             self.elements.get_keys(self.keys)
+            self.camera.get_keys(self.keys)
         elif event.type == pg.KEYUP:
             self.keys = pg.key.get_pressed()
             self.elements.get_keys(self.keys)
-
-
-
+            self.camera.get_keys(self.keys)

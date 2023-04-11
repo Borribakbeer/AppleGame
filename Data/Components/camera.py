@@ -9,8 +9,11 @@ class Camera(object):
     def __init__(self):
         self.position = np.array([0, 0])
         self.size = 1000  # how many units the y axis of the camera is long
+        self.velocity = [0, 0]
 
     def draw_frame(self, surface, objects):
+        self.position = np.add(self.position, self.velocity)
+
         objects = objects.get_objects()
 
         drawableObjects = self.check_within_range(objects)
@@ -36,6 +39,20 @@ class Camera(object):
                 drawableObjects.append(obj)
 
         return drawableObjects
+
+    def get_keys(self, keys):
+        if keys[pg.K_UP]:
+            self.velocity = rc.DIRECT_DICT["front"]
+        elif keys[pg.K_DOWN]:
+            self.velocity = rc.DIRECT_DICT["back"]
+        elif keys[pg.K_LEFT]:
+            self.velocity = rc.DIRECT_DICT["left"]
+        elif keys[pg.K_RIGHT]:
+            self.velocity = rc.DIRECT_DICT["right"]
+        else:
+            self.velocity = [0, 0]
+
+        pass
 
     def uv_to_screen_space(self, coords):
         coords[0] = (coords[0] + 1) / 2.0

@@ -40,13 +40,10 @@ class BaseSprite(pg.sprite.Sprite):
 
 
 class Rigidbody(object):
-    def __init__(self):
+    def __init__(self, pos):
         self.acceleration = np.array([0.0, 0.0])
         self.velocity = np.array([0.0, 0.0])
-        self.worldPosition = np.array([0.0, 0.0])
-
-        # Possible tags are: "ALWAYS_RENDER"
-        self.tags = {}
+        self.worldPosition = pos
 
     def add_force(self, force):
         print("Adding force: " + str(force))
@@ -63,11 +60,15 @@ class GameObject(BaseSprite):
     def __init__(self, folder, name, pos=(0, 0), size=(1, 1), *groups):
         self.size = size
         self.image = resources.GFX[folder][name]
-        self.screenposition = pos
+        self.worldPosition = pos
+        self.screenposition = [0, 0]
         BaseSprite.__init__(self, pos, self.image.get_size(), *groups)
         self.keys = []
 
-    def update(self):
+        # Possible tags are: "ALWAYS_RENDER"
+        self.tags = {}
+
+    def update(self, now):
         pass
 
     def draw(self, surface):
