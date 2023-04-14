@@ -125,11 +125,11 @@ class Game(state_machine.State):
 
     def make_elements(self):
         elements = Tools.GameObjectsCollection()
-        elements.add(player.Player([3, 0]))
-        elements.add(player.Player([0, 3]))
+        elements.add(player.Player(pg.math.Vector2(3,0)))
 
-        elements.add(ParentComponents.GameObject("Debug", "Grid", [0, 0], [1, 1]))
+        #elements.add(ParentComponents.GameObject("Debug", "Grid", pg.math.Vector2(0,2), pg.math.Vector2(1,1)))
 
+        elements.add(ParentComponents.GameObject("Tilemaps", "Grass", pg.math.Vector2(3, 3), pg.math.Vector2(2,2)))
         return elements    
 
     def update(self, keys, now):

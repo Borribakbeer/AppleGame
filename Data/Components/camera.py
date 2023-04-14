@@ -7,9 +7,9 @@ import ResourceManager as rc
 
 class Camera(object):
     def __init__(self):
-        self.position = np.array([0, 0])
+        self.position = pg.math.Vector2()
         self.size = 1000  # how many units the y axis of the camera is long
-        self.velocity = [0, 0]
+        self.velocity = pg.math.Vector2()
 
 
     def draw_frame(self, surface, objects):
@@ -21,20 +21,20 @@ class Camera(object):
 
         self.set_objects_world_to_screen_space(drawableObjects)
 
-        drawableObjects.draw(surface)
+        drawableObjects.custom_draw(surface)
 
     def set_objects_world_to_screen_space(self, objects):
         for obj in objects:
-            obj.screenposition = self.world_to_screen_space(obj.worldPosition)
+            obj.screenposition = self.world_to_screen_space(obj.worldposition)
 
     def check_within_range(self, objects):
-        drawableObjects = pg.sprite.Group()
+        drawableObjects = CameraRenderGroup()
         for obj in objects:
             if not "DRAWABLE" in obj.tags:
                 continue
-            direction = np.array(obj.screenposition) - np.array(self.position)
+            direction = obj.worldposition - self.position
             dist = math.sqrt(direction[0] ** 2 + direction[1] ** 2)
-            if (dist < self.size - 5) or ("ALWAYS_RENDER" in obj.tags):
+            if (dist < self.size) or ("ALWAYS_RENDER" in obj.tags):
                 drawableObjects.add(obj)
 
         return drawableObjects
@@ -67,3 +67,12 @@ class Camera(object):
         direction[1] = direction[1] * (2.0 / self.size)
         screenPos = self.uv_to_screen_space(direction)
         return screenPos
+
+class CameraRenderGroup(pg.sprite.Group):
+    def __init__(self):
+        super().__init__()
+        
+    def custom_draw(self, surface):
+        for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
+            sprite.reset_position(sprite.screenposition)
+            surface.blit(sprite.image, sprite.rect)

@@ -12,7 +12,7 @@ class Player(pc.GameObject, pc.Rigidbody):
     def __init__(self, pos):
         pc.Rigidbody.__init__(self, pos)
         pc.GameObject.__init__(self, "Misc", "Heart", pos, (1, 1))
-        self.worldPosition = pos
+        self.worldposition = pos
         self.screenposition = [0, 0]
 
     def update(self, now):

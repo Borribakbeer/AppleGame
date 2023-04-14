@@ -55,5 +55,5 @@ def graphics_from_directories(directories):
     return GFX
 
 
-_SUB_DIRECTORIES = ["Misc", "Debug"]
+_SUB_DIRECTORIES = ["Misc", "Debug", "Player", "Tilemaps"]
 GFX = graphics_from_directories(_SUB_DIRECTORIES)

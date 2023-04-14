@@ -6,7 +6,7 @@ import pygame as pg
 class TitleImage(pc.BaseSprite):
     def __init__(self, *groups):
         self.image = resources.GFX["Misc"]["Title"]
-        pc.BaseSprite.__init__(self, (0, 0), self.image.get_size(), *groups)
+        pc.BaseSprite.__init__(self, pg.math.Vector2(0, 0), pg.math.Vector2(1, 1), *groups)
         self.needed_groups = groups
 
 

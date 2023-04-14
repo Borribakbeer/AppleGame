@@ -9,7 +9,13 @@ class BaseSprite(pg.sprite.Sprite):
     # A very basic base class that contains some commonly used functionality.
     def __init__(self, pos, size, *groups):
         pg.sprite.Sprite.__init__(self, *groups)
-        self.rect = pg.Rect(pos, size)
+
+        self.pixelsize = pg.math.Vector2(self.image.get_size()) #* size
+        leftTopPos = pg.math.Vector2()
+        leftTopPos.x = pos.x - self.pixelsize.x / 2.0
+        leftTopPos.y = pos.y - (self.pixelsize.y / 2.0)
+        
+        self.rect = pg.Rect(pos, self.pixelsize)
         self.exact_position = list(self.rect.topleft)
         self.old_position = self.exact_position[:]
 
@@ -31,20 +37,19 @@ class BaseSprite(pg.sprite.Sprite):
         argument can be specified to assign to a chosen attribute of the
         sprite's rect.
         """
-        setattr(self.rect, attribute, tuple(value))
+        setattr(self.rect, attribute, value)
         self.exact_position = list(self.rect.center)
         self.old_position = self.exact_position[:]
 
     def draw(self, surface):
-        print("DRAWNING SPrite")
         surface.blit(self.image, self.rect)
 
 
 class Rigidbody(object):
     def __init__(self, pos):
-        self.acceleration = np.array([0.0, 0.0])
-        self.velocity = np.array([0.0, 0.0])
-        self.worldPosition = pos
+        self.acceleration = pg.math.Vector2()
+        self.velocity = pg.math.Vector2()
+        self.worldposition = pos
 
     def add_force(self, force):
         print("Adding force: " + str(force))
@@ -54,16 +59,18 @@ class Rigidbody(object):
     def update(self):
         dt = pg.time.Clock().get_time()
         self.velocity = [self.velocity[x] + self.acceleration[x] for x in range(len(self.acceleration))]
-        self.worldPosition = [self.worldPosition[x] + (self.velocity[x]) for x in range(len(self.worldPosition))]
+        self.worldposition += self.velocity
 
 
 class GameObject(BaseSprite):
-    def __init__(self, folder, name, pos=(0, 0), size=(1, 1), *groups):
+    def __init__(self, folder, name, pos=pg.math.Vector2(), size=pg.math.Vector2(1,1), *groups):
         self.size = size
         self.image = resources.GFX[folder][name]
-        self.worldPosition = pos
-        self.screenposition = [0, 0]
-        BaseSprite.__init__(self, pos, self.image.get_size(), *groups)
+        
+        self.worldposition = pos
+        self.screenposition = pg.math.Vector2()
+
+        BaseSprite.__init__(self, pos, size, *groups)
         self.keys = []
 
         # Possible tags are: "ALWAYS_RENDER", "DRAWABLE"
