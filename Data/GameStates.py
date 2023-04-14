@@ -1,5 +1,4 @@
 import pygame as pg
-
 import Utils.ParentComponents
 from Utils import state_machine, Tools, ParentComponents
 from StateBuilders import MainMenuBuilder
@@ -24,10 +23,10 @@ class GameController(object):
         self.keys = pg.key.get_pressed()
         self.state_machine = state_machine.StateMachine()
 
-    def update(self):
+    def update(self, dt):
         # Updates the currently active state.
         self.now = pg.time.get_ticks()
-        self.state_machine.update(self.keys, self.now)
+        self.state_machine.update(self.keys, self.now, dt)
 
     def draw(self, interpolate):
         if not self.state_machine.state.done:
@@ -71,10 +70,11 @@ class GameController(object):
         # Main loop for entire program. Uses a constant timestep.
         lag = 0.0
         while not self.done:
-            lag += self.clock.tick(self.fps)
+            dt = self.clock.tick(self.fps)
+            lag += dt
             self.event_loop()
             while lag >= TIME_PER_UPDATE:
-                self.update()
+                self.update(dt)
                 lag -= TIME_PER_UPDATE
             self.draw(lag / TIME_PER_UPDATE)
 
@@ -93,7 +93,7 @@ class MainMenu(state_machine.State):
         group.add(MainMenuBuilder.AnyKey(), MainMenuBuilder.TitleImage(), layer=1)
         return group
 
-    def update(self, keys, now):
+    def update(self, keys, now, dt):
         """Updates the title screen."""
         self.now = now
         self.elements.update(now)
@@ -125,20 +125,17 @@ class Game(state_machine.State):
 
     def make_elements(self):
         elements = Tools.GameObjectsCollection()
-        elements.add(player.Player(pg.math.Vector2(3,0)))
+        elements.add(player.Player(pg.math.Vector2(0,0)))
 
-        #elements.add(ParentComponents.GameObject("Debug", "Grid", pg.math.Vector2(0,2), pg.math.Vector2(1,1)))
-
-        elements.add(ParentComponents.GameObject("Tilemaps", "Grass", pg.math.Vector2(3, 3), pg.math.Vector2(2,2)))
+        elements.add(ParentComponents.GameObject("Tilemaps", "Grass", pg.math.Vector2(0, 0), pg.math.Vector2(5,5)))
         return elements    
 
-    def update(self, keys, now):
+    def update(self, keys, now, dt):
         self.now = now
-        self.elements.update(now)
+        self.elements.update(now, keys, dt)
 
     def draw(self, surface, interpolate):
         self.camera.draw_frame(surface, self.elements)
-        # self.elements.draw(surface)
 
     def get_event(self, event):
         self.elements.get_event(event)

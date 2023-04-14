@@ -11,6 +11,9 @@ from Utils import Tools
 pg.init()
 
 SCREEN_SIZE = (1280, 720)
+ASPECT_RATIO = SCREEN_SIZE[0] / SCREEN_SIZE[1]
+CAMERA_ZOOM = 15.0
+UNIT_SCALE = SCREEN_SIZE[1] / CAMERA_ZOOM
 ORIGINAL_CAPTION = "The Apple Game"
 SCREEN_RECT = pg.Rect((0, 0), SCREEN_SIZE)
 _FONT_PATH = os.path.join("Resources", "Fonts", "Fixedsys500c.ttf")

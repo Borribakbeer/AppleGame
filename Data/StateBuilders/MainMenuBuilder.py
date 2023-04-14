@@ -13,10 +13,20 @@ class TitleImage(pc.BaseSprite):
 class AnyKey(pg.sprite.Sprite):
     def __init__(self, *groups):
         pg.sprite.Sprite.__init__(self, *groups)
-        self.image = render_font("Fixedsys500c", 30,
-                                 "[Press Any Key]", (255, 255, 255))
+        self.rawimage = render_font("Fixedsys500c", 30,
+                                 "[Press Any Key]", (255, 255, 0))
+        self.null_image = pg.Surface((1,1)).convert_alpha()
+        self.null_image.fill((0,0,0,0))
+        self.image = self.rawimage
         center = (resources.SCREEN_RECT.centerx, 650)
         self.rect = self.image.get_rect(center=center)
+
+    def update(self, now):
+        if now % 700 < 350:
+            self.image = self.rawimage
+        else:
+            self.image = self.null_image
+
 
 
 def render_font(font, size, msg, color=(255, 255, 255)):

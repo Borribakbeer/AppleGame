@@ -10,26 +10,16 @@ class BaseSprite(pg.sprite.Sprite):
     def __init__(self, pos, size, *groups):
         pg.sprite.Sprite.__init__(self, *groups)
 
-        self.pixelsize = pg.math.Vector2(self.image.get_size()) #* size
-        leftTopPos = pg.math.Vector2()
-        leftTopPos.x = pos.x - self.pixelsize.x / 2.0
-        leftTopPos.y = pos.y - (self.pixelsize.y / 2.0)
+        size = pg.math.Vector2(size) * resources.UNIT_SCALE
+
+        self.pixelsize = pg.math.Vector2(self.image.get_size())
+        leftTopPosition = pos - (self.pixelsize / 2)
+
+        self.image = pg.transform.scale(self.image, size)
         
-        self.rect = pg.Rect(pos, self.pixelsize)
+        self.rect = pg.Rect(leftTopPosition, self.pixelsize)
         self.exact_position = list(self.rect.topleft)
         self.old_position = self.exact_position[:]
-
-    @property
-    def delta_velocity(self):
-        """
-        Returns the total displacement undergone in a frame. Used for the
-        interpolation of the sprite's location in the draw phase.
-        """
-        return (self.exact_position[0] - self.old_position[0],
-                self.exact_position[1] - self.old_position[1])
-
-    def set_position(self):
-        pass
 
     def reset_position(self, value, attribute="center"):
         """
@@ -52,31 +42,28 @@ class Rigidbody(object):
         self.worldposition = pos
 
     def add_force(self, force):
-        print("Adding force: " + str(force))
-        self.velocity = np.add(self.velocity, force)
-        print("current velocity: " + str(self.velocity))
+        self.velocity += force
 
-    def update(self):
-        dt = pg.time.Clock().get_time()
+    def update(self, dt):
         self.velocity = [self.velocity[x] + self.acceleration[x] for x in range(len(self.acceleration))]
-        self.worldposition += self.velocity
+        self.worldposition += pg.math.Vector2(self.velocity) * (dt / 1000)
 
 
 class GameObject(BaseSprite):
-    def __init__(self, folder, name, pos=pg.math.Vector2(), size=pg.math.Vector2(1,1), *groups):
+    def __init__(self, folder, name, pos, size, *groups):
         self.size = size
-        self.image = resources.GFX[folder][name]
-        
         self.worldposition = pos
-        self.screenposition = pg.math.Vector2()
+
+        self.image = resources.GFX[folder][name]        
 
         BaseSprite.__init__(self, pos, size, *groups)
+
         self.keys = []
 
         # Possible tags are: "ALWAYS_RENDER", "DRAWABLE"
         self.tags = {"DRAWABLE"}
 
-    def update(self, now):
+    def update(self, now, keys, dt):
         pass
 
     def draw(self, surface):

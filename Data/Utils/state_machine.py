@@ -21,7 +21,7 @@ class StateMachine(object):
         self.state_name = start_state
         self.state = self.state_dict[self.state_name]
 
-    def update(self, keys, now):
+    def update(self, keys, now, dt):
         """
             Checks if a state is done or has called for a game quit.
             State is flipped if necessary and State.update is called.
@@ -32,7 +32,7 @@ class StateMachine(object):
             self.done = True
         elif self.state.done:
             self.flip_state()
-        self.state.update(keys, now)
+        self.state.update(keys, now, dt)
 
     def flip_state(self):
         """
@@ -95,6 +95,6 @@ class State(object):
         self.done = False
         return self.persist
 
-    def update(self, keys, now):
+    def update(self, keys, now, dt):
         """Update function for state.  Must be overloaded in children."""
         pass

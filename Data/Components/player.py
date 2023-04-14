@@ -15,9 +15,9 @@ class Player(pc.GameObject, pc.Rigidbody):
         self.worldposition = pos
         self.screenposition = [0, 0]
 
-    def update(self, now):
-        pc.GameObject.update(self, now)
-        pc.Rigidbody.update(self)
+    def update(self, now, keys, dt):
+        pc.GameObject.update(self, now, keys, dt)
+        pc.Rigidbody.update(self, dt)
 
     def draw(self, surface):
         pc.GameObject.draw(self, surface)
