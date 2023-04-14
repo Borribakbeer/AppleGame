@@ -1,5 +1,5 @@
-from Data.Utils import ParentComponents as pc
-from Data import ResourceManager as resources
+from Utils import ParentComponents as pc
+import ResourceManager as resources
 import pygame as pg
 
 

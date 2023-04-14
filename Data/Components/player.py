@@ -1,9 +1,9 @@
 import pygame.math
 
-import Data.Utils.ParentComponents as pc
-from Data.Utils import Tools
-import Data.Stats.PlayerStats as PlayerData
-import Data.ResourceManager as resources
+from Utils import ParentComponents as pc
+from Utils import Tools
+from Stats import PlayerStats
+import ResourceManager as resources
 import pygame as pg
 import numpy as np
 
@@ -25,12 +25,12 @@ class Player(pc.GameObject, pc.Rigidbody):
     def get_key(self, receivedKeys):
         self.keys = receivedKeys
         if self.keys[pg.K_w]:
-            self.velocity = np.array(resources.DIRECT_DICT["front"]) * PlayerData.SPEED
+            self.velocity = np.array(resources.DIRECT_DICT["front"]) * PlayerStats.SPEED
         elif self.keys[pg.K_s]:
-            self.velocity = np.array(resources.DIRECT_DICT["back"]) * PlayerData.SPEED
+            self.velocity = np.array(resources.DIRECT_DICT["back"]) * PlayerStats.SPEED
         elif self.keys[pg.K_d]:
-            self.velocity = np.array(resources.DIRECT_DICT["right"]) * PlayerData.SPEED
+            self.velocity = np.array(resources.DIRECT_DICT["right"]) * PlayerStats.SPEED
         elif self.keys[pg.K_a]:
-            self.velocity = np.array(resources.DIRECT_DICT["left"]) * PlayerData.SPEED
+            self.velocity = np.array(resources.DIRECT_DICT["left"]) * PlayerStats.SPEED
         else:
             self.velocity = np.array((0, 0))

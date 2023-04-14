@@ -1,4 +1,4 @@
-from Data.game import AppleGame
+from game import AppleGame
 
 
 if __name__ == "__main__":

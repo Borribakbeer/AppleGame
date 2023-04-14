@@ -1,5 +1,5 @@
 import pygame
-from . import GameStates, ResourceManager
+import GameStates, ResourceManager
 
 
 class AppleGame:

@@ -6,14 +6,14 @@ Also contained are various constants used throughout the program.
 import os
 import pygame as pg
 
-from .Utils import Tools
+from Utils import Tools
 
 pg.init()
 
 SCREEN_SIZE = (1280, 720)
 ORIGINAL_CAPTION = "The Apple Game"
 SCREEN_RECT = pg.Rect((0, 0), SCREEN_SIZE)
-_FONT_PATH = "../" + os.path.join("Resources", "Fonts", "Fixedsys500c.ttf")
+_FONT_PATH = os.path.join("Resources", "Fonts", "Fixedsys500c.ttf")
 BIG_FONT = pg.font.Font(_FONT_PATH, 100)
 
 # Initialization
@@ -40,14 +40,14 @@ Z_ORDER = {"Background": -100,
 
 # Resource loading (Fonts and music just contain path names).
 SAVE_PATH = os.path.join("Resources", "Save_data", "save_data.save")
-FONTS = Tools.load_all_fonts(os.path.join("..", "Resources", "Fonts"))
+FONTS = Tools.load_all_fonts(os.path.join("Resources", "Fonts"))
 
 
 def graphics_from_directories(directories):
     """
     Calls the tools.load_all_graphics() function for all directories passed.
     """
-    base_path = "../" + os.path.join("Resources", "Graphics")
+    base_path = os.path.join("Resources", "Graphics")
     GFX = {}
     for directory in directories:
         path = os.path.join(base_path, directory)

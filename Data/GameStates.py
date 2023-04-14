@@ -1,11 +1,10 @@
 import pygame as pg
 
-import Data.Utils.ParentComponents
-from .Utils import state_machine
-from .Utils import Tools
-from .StateBuilders import MainMenuBuilder
-from . import ResourceManager
-from .Components import player, camera
+import Utils.ParentComponents
+from Utils import state_machine, Tools, ParentComponents
+from StateBuilders import MainMenuBuilder
+import ResourceManager
+from Components import player, camera
 
 TIME_PER_UPDATE = 16.0  # Milliseconds
 
@@ -137,7 +136,7 @@ class Game(state_machine.State):
         self.foregroundLayer.add(player.Player([3, 0]))
         self.foregroundLayer.add(player.Player([0, 3]))
         # Default
-        self.defaultLayer.add(Data.Utils.ParentComponents.GameObject("Debug", "Grid", [0, 0], [1, 1]))
+        self.defaultLayer.add(ParentComponents.GameObject("Debug", "Grid", [0, 0], [1, 1]))
         # Background
 
     def update(self, keys, now):

@@ -1,7 +1,7 @@
 # Some Basic Components from which all other components can derive
 import pygame as pg
-import Data.Utils.Tools as tools
-import Data.ResourceManager as resources
+import Utils.Tools as tools
+import ResourceManager as resources
 import numpy as np
 
 

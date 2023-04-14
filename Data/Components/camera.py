@@ -1,8 +1,8 @@
 import pygame as pg
 import numpy as np
 import math
-from Data.Utils import ParentComponents as pc
-import Data.ResourceManager as rc
+from Utils import ParentComponents as pc
+import ResourceManager as rc
 
 
 class Camera(object):
