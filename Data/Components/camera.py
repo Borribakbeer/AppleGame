@@ -11,6 +11,7 @@ class Camera(object):
         self.size = 1000  # how many units the y axis of the camera is long
         self.velocity = [0, 0]
 
+
     def draw_frame(self, surface, objects):
         self.position = np.add(self.position, self.velocity)
 
@@ -20,23 +21,21 @@ class Camera(object):
 
         self.set_objects_world_to_screen_space(drawableObjects)
 
-        self.draw_objects(drawableObjects, surface)
+        drawableObjects.draw(surface)
 
     def set_objects_world_to_screen_space(self, objects):
         for obj in objects:
             obj.screenposition = self.world_to_screen_space(obj.worldPosition)
 
-    def draw_objects(self, objects, surface):
-        for obj in objects:
-            obj.draw(surface)
-
     def check_within_range(self, objects):
-        drawableObjects = []
+        drawableObjects = pg.sprite.Group()
         for obj in objects:
+            if not "DRAWABLE" in obj.tags:
+                continue
             direction = np.array(obj.screenposition) - np.array(self.position)
             dist = math.sqrt(direction[0] ** 2 + direction[1] ** 2)
             if (dist < self.size - 5) or ("ALWAYS_RENDER" in obj.tags):
-                drawableObjects.append(obj)
+                drawableObjects.add(obj)
 
         return drawableObjects
 

@@ -114,15 +114,7 @@ class MainMenu(state_machine.State):
 class Game(state_machine.State):
     def __init__(self):
         state_machine.State.__init__(self)
-        self.backgroundLayer = Tools.GameObjectsCollection()
-        self.defaultLayer = Tools.GameObjectsCollection()
-        self.foregroundLayer = Tools.GameObjectsCollection()
-        self.make_elements()
-
-        objs = self.backgroundLayer.get_objects() + self.defaultLayer.get_objects() + self.foregroundLayer.get_objects()
-        self.elements = Tools.GameObjectsCollection()
-        for obj in objs:
-            self.elements.add(obj)
+        self.elements = self.make_elements()
 
         self.camera = camera.Camera()
         self.keys = []
@@ -132,21 +124,20 @@ class Game(state_machine.State):
         self.start_time = now
 
     def make_elements(self):
-        # Foreground
-        self.foregroundLayer.add(player.Player([3, 0]))
-        self.foregroundLayer.add(player.Player([0, 3]))
-        # Default
-        self.defaultLayer.add(ParentComponents.GameObject("Debug", "Grid", [0, 0], [1, 1]))
-        # Background
+        elements = Tools.GameObjectsCollection()
+        elements.add(player.Player([3, 0]))
+        elements.add(player.Player([0, 3]))
+
+        elements.add(ParentComponents.GameObject("Debug", "Grid", [0, 0], [1, 1]))
+
+        return elements    
 
     def update(self, keys, now):
         self.now = now
         self.elements.update(now)
 
     def draw(self, surface, interpolate):
-        self.camera.draw_frame(surface, self.backgroundLayer)
-        self.camera.draw_frame(surface, self.defaultLayer)
-        self.camera.draw_frame(surface, self.foregroundLayer)
+        self.camera.draw_frame(surface, self.elements)
         # self.elements.draw(surface)
 
     def get_event(self, event):

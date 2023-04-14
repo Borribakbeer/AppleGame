@@ -36,6 +36,7 @@ class BaseSprite(pg.sprite.Sprite):
         self.old_position = self.exact_position[:]
 
     def draw(self, surface):
+        print("DRAWNING SPrite")
         surface.blit(self.image, self.rect)
 
 
@@ -65,13 +66,14 @@ class GameObject(BaseSprite):
         BaseSprite.__init__(self, pos, self.image.get_size(), *groups)
         self.keys = []
 
-        # Possible tags are: "ALWAYS_RENDER"
-        self.tags = {}
+        # Possible tags are: "ALWAYS_RENDER", "DRAWABLE"
+        self.tags = {"DRAWABLE"}
 
     def update(self, now):
         pass
 
     def draw(self, surface):
+        print("DRAWNING Obj")
         BaseSprite.reset_position(self, self.screenposition)
         BaseSprite.draw(self, surface)
 
