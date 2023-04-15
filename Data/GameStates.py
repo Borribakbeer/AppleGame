@@ -2,8 +2,8 @@ import pygame as pg
 import Utils.ParentComponents
 from Utils import state_machine, Tools, ParentComponents
 from StateBuilders import MainMenuBuilder
-import ResourceManager
-from Components import player, camera
+from ResourceManager import *
+from Components import player, camera, tilemap_generator
 
 TIME_PER_UPDATE = 16.0  # Milliseconds
 
@@ -12,7 +12,7 @@ class GameController(object):
     # The class that controls the game states
 
     def __init__(self, caption):
-        pg.display.set_mode(ResourceManager.SCREEN_SIZE)
+        pg.display.set_mode(SCREEN_SIZE)
         self.screen = pg.display.get_surface()
         self.caption = caption
         self.done = False
@@ -127,7 +127,7 @@ class Game(state_machine.State):
         elements = Tools.GameObjectsCollection()
         elements.add(player.Player(pg.math.Vector2(0,0)))
 
-        elements.add(ParentComponents.GameObject("Tilemaps", "Grass", pg.math.Vector2(0, 0), pg.math.Vector2(5,5)))
+        elements.add(tilemap_generator.Tilemap(tilemap_generator.Tileset("Grass", 0, 0), (10, 10), PIXELSCALE_IMAGES, pg.Rect((0, 0), SCREEN_SIZE)))
         return elements    
 
     def update(self, keys, now, dt):

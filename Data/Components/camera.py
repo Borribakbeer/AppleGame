@@ -13,17 +13,17 @@ class Camera(object):
         self.objects = CameraRenderGroup()
         self.ground = CameraRenderGroup(False)
 
-    def draw_frame(self, surface, objects):
+    def draw_frame(self, surface, objectsCollection):
         self.position = np.add(self.position, self.velocity)
 
-        objects = objects.get_objects()
+        objects = objectsCollection.get_objects()
 
         self.check_within_range(objects)
 
         self.set_objects_world_to_screen_space(self.objects)
         self.set_objects_world_to_screen_space(self.ground)
 
-        self.ground.custom_draw()
+        self.ground.custom_draw(surface)
         self.objects.custom_draw(surface)
 
 
@@ -35,13 +35,13 @@ class Camera(object):
         for obj in objects:
             if not "DRAWABLE" in obj.tags:
                 continue
-            if "GROUND":
+            if "GROUND" in obj.tags:
                 self.ground.add(obj)
                 continue
             direction = obj.worldposition - self.position
             dist = math.sqrt(direction[0] ** 2 + direction[1] ** 2)
             if (dist < self.size * rc.ASPECT_RATIO * 1.3) or ("ALWAYS_RENDER" in obj.tags):
-                self.drawableObjects.add(obj)
+                self.objects.add(obj)
 
     def get_keys(self, keys):
         if keys[pg.K_UP]:
