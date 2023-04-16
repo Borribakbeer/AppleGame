@@ -125,9 +125,11 @@ class Game(state_machine.State):
 
     def make_elements(self):
         elements = Tools.GameObjectsCollection()
-        elements.add(player.Player(pg.math.Vector2(0,0)))
+        #elements.add(player.Player(pg.math.Vector2(0,0)))
 
-        elements.add(tilemap_generator.Tilemap(tilemap_generator.Tileset("Grass", 0, 0), (10, 10), PIXELSCALE_IMAGES, pg.Rect((0, 0), SCREEN_SIZE)))
+        elements.add(tilemap_generator.Tilemap(tilemap_generator.Tileset("Grass", 0, 0), (10, 10), PIXELSCALE_IMAGES))
+
+        print(str(elements.get_objects()))
         return elements    
 
     def update(self, keys, now, dt):

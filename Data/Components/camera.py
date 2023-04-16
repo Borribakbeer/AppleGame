@@ -21,8 +21,9 @@ class Camera(object):
         self.check_within_range(objects)
 
         self.set_objects_world_to_screen_space(self.objects)
-        self.set_objects_world_to_screen_space(self.ground)
+        # self.set_objects_world_to_screen_space(self.ground)
 
+        #Render order: (1 tilemaps, 2 un-y-sorted ground, 3 y-sorted objects)
         self.ground.custom_draw(surface)
         self.objects.custom_draw(surface)
 
@@ -38,6 +39,7 @@ class Camera(object):
             if "GROUND" in obj.tags:
                 self.ground.add(obj)
                 continue
+
             direction = obj.worldposition - self.position
             dist = math.sqrt(direction[0] ** 2 + direction[1] ** 2)
             if (dist < self.size * rc.ASPECT_RATIO * 1.3) or ("ALWAYS_RENDER" in obj.tags):
@@ -81,9 +83,8 @@ class CameraRenderGroup(pg.sprite.Group):
     def custom_draw(self, surface):
         if self.sorting:
             for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
-                sprite.reset_position(sprite.screenposition)
-                surface.blit(sprite.image, sprite.rect)
+                sprite.draw(surface)
         else:
             for sprite in self.sprites():
-                sprite.reset_position(sprite.screenposition)
-                surface.blit(sprite.image, sprite.rect)
+                sprite.draw(surface)
+

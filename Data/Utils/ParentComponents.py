@@ -69,7 +69,6 @@ class GameObject(BaseSprite):
         pass
 
     def draw(self, surface):
-        print("DRAWNING Obj")
         BaseSprite.reset_position(self, self.screenposition)
         BaseSprite.draw(self, surface)
 
