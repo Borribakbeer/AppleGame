@@ -1,5 +1,4 @@
 import pygame as pg
-from pygame.math import Vector2
 from ResourceManager import *
 from Utils import ParentComponents as pc
 import numpy as np
@@ -41,6 +40,10 @@ class TileChunk(pc.BaseSprite):
 
     def set_zero(self):
         self.map = np.zeros(self.size, dtype=int)
+        self.construct_image()
+
+    def set_map(self, map):
+        self.map = map
         self.construct_image()
 
     def set_random(self):
