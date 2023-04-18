@@ -124,8 +124,7 @@ class Game(state_machine.State):
         elements = Tools.GameObjectsCollection()
         elements.add(player.Player(pg.math.Vector2(0,0)))
 
-        elements.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), pg.math.Vector2(0, 0), (10, 10), PIXELSCALE_IMAGES))
-        elements.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), pg.math.Vector2(0, 0), (10, 10), PIXELSCALE_IMAGES))
+
 
         print(str(elements.get_objects()))
         return elements    
