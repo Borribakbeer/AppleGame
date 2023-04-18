@@ -8,13 +8,20 @@ import ResourceManager as rc
 class Camera(object):
     def __init__(self):
         self.position = pg.math.Vector2()
+        self.player = None
         self.size = rc.CAMERA_ZOOM # how many units the y axis of the camera is long
         self.velocity = pg.math.Vector2()
         self.objects = CameraRenderGroup()
         self.ground = CameraRenderGroup(False)
+        self.mouseZoom = 0
 
     def draw_frame(self, surface, objectsCollection):
-        self.position = np.add(self.position, self.velocity)
+        if self.player:
+            self.position = self.player.worldposition
+        else:
+            for obj in self.objects.sprites():
+                if "Player" in obj.tags:
+                    self.player = obj
 
         objects = objectsCollection.get_objects()
 
@@ -45,19 +52,10 @@ class Camera(object):
             if (dist < self.size * rc.ASPECT_RATIO * 1.3) or ("ALWAYS_RENDER" in obj.tags):
                 self.objects.add(obj)
 
-    def get_keys(self, keys):
-        if keys[pg.K_UP]:
-            self.velocity = rc.DIRECT_DICT["front"]
-        elif keys[pg.K_DOWN]:
-            self.velocity = rc.DIRECT_DICT["back"]
-        elif keys[pg.K_LEFT]:
-            self.velocity = rc.DIRECT_DICT["left"]
-        elif keys[pg.K_RIGHT]:
-            self.velocity = rc.DIRECT_DICT["right"]
-        else:
-            self.velocity = [0, 0]
+    def get_event(self, event):
+        if event == pg.MOUSEWHEEL:
+            self.mouseZoom = event.y
 
-        pass
 
 
     def world_to_screen_space(self, coords):

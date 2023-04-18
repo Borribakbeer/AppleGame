@@ -36,10 +36,7 @@ class GameController(object):
             self.show_fps()
 
     def event_loop(self):
-        """
-        Process all events and pass them down to the state_machine.
-        The f5 key globally turns on/off the display of FPS in the caption
-        """
+        #Process events
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -67,7 +64,7 @@ class GameController(object):
             pg.display.set_caption(with_fps)
 
     def main(self):
-        # Main loop for entire program. Uses a constant timestep.
+        # Main loop for entire program. Uses a constant timestep (TIME_PER_UPDATE).
         lag = 0.0
         while not self.done:
             dt = self.clock.tick(self.fps)
@@ -128,6 +125,7 @@ class Game(state_machine.State):
         elements.add(player.Player(pg.math.Vector2(0,0)))
 
         elements.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), pg.math.Vector2(0, 0), (10, 10), PIXELSCALE_IMAGES))
+        elements.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), pg.math.Vector2(0, 0), (10, 10), PIXELSCALE_IMAGES))
 
         print(str(elements.get_objects()))
         return elements    
@@ -144,8 +142,7 @@ class Game(state_machine.State):
         if event.type == pg.KEYDOWN:
             self.keys = pg.key.get_pressed()
             self.elements.get_keys(self.keys)
-            self.camera.get_keys(self.keys)
         elif event.type == pg.KEYUP:
             self.keys = pg.key.get_pressed()
             self.elements.get_keys(self.keys)
-            self.camera.get_keys(self.keys)
+        self.camera.get_event(event)

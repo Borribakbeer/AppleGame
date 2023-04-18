@@ -14,6 +14,7 @@ class Player(pc.GameObject, pc.Rigidbody):
         pc.GameObject.__init__(self, "Misc", "Heart", pos, (1, 1))
         self.worldposition = pos
         self.screenposition = [0, 0]
+        self.tags.add("Player")
 
     def update(self, now, keys, dt):
         pc.GameObject.update(self, now, keys, dt)
