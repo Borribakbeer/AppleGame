@@ -1,7 +1,7 @@
 import pygame as pg
 import Utils.ParentComponents
 from Utils import state_machine, Tools, ParentComponents
-from StateBuilders import MainMenuBuilder
+from StateBuilders import MainMenuBuilder, GameBuilder
 from ResourceManager import *
 from Components import player, camera, tilemap_generator
 
@@ -127,7 +127,7 @@ class Game(state_machine.State):
         elements = Tools.GameObjectsCollection()
         elements.add(player.Player(pg.math.Vector2(0,0)))
 
-        elements.add(tilemap_generator.Tilemap(tilemap_generator.Tileset("Grass", 0, 0), (10, 10), PIXELSCALE_IMAGES))
+        elements.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), pg.math.Vector2(0, 0), (10, 10), PIXELSCALE_IMAGES))
 
         print(str(elements.get_objects()))
         return elements    

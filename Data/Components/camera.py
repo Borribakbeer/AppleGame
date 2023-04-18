@@ -21,7 +21,7 @@ class Camera(object):
         self.check_within_range(objects)
 
         self.set_objects_world_to_screen_space(self.objects)
-        # self.set_objects_world_to_screen_space(self.ground)
+        self.set_objects_world_to_screen_space(self.ground)
 
         #Render order: (1 tilemaps, 2 un-y-sorted ground, 3 y-sorted objects)
         self.ground.custom_draw(surface)

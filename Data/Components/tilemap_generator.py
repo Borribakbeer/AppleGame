@@ -4,10 +4,11 @@ from ResourceManager import *
 from Utils import ParentComponents as pc
 import numpy as np
 
-class Tilemap(pc.BaseSprite):
-    def __init__(self, tileset, size=(10, 20), pixelscale = PIXELSCALE_IMAGES, rect=None, *groups):
+class TileChunk(pc.BaseSprite):
+    def __init__(self, tileset, pos, size=(8, 8), pixelscale = PIXELSCALE_IMAGES, *groups):
         pg.sprite.Sprite.__init__(self, *groups)
 
+        self.worldposition = pos
         self.size = size
         self.tileset = tileset
         self.map = np.zeros(size, dtype=int)
@@ -16,30 +17,36 @@ class Tilemap(pc.BaseSprite):
         self.pixelscale = UNIT_SCALE * pixelscale
 
         h, w = self.size
-        self.image = pg.Surface((pixelscale*w, pixelscale*h))
-        if rect:
-            self.rect = pg.Rect(rect)
-        else:
-            self.rect = self.tileset.rect
+        self.image = pg.Surface((w * UNIT_SCALE, h * UNIT_SCALE))
+        self.rect = self.tileset.rect
+
+        self.exact_position = list(self.rect.topleft)
+        self.old_position = self.exact_position[:]
+
+        self.construct_image()
 
     def update(self, now, keys, dt):
         pass
 
     def draw(self, surface):
+        pc.BaseSprite.reset_position(self, self.screenposition)
+        pc.BaseSprite.draw(self, surface)
+
+    def construct_image(self):
         m, n = self.map.shape
         for i in range(m):
             for j in range(n):
                 tile = self.tileset.tiles[self.map[i, j]]
                 self.image.blit(tile, (j*UNIT_SCALE, i*UNIT_SCALE))
-        pc.BaseSprite.draw(self, surface)
 
     def set_zero(self):
         self.map = np.zeros(self.size, dtype=int)
-        self.draw()
+        self.construct_image()
 
     def set_random(self):
         n = len(self.tileset.tiles)
         self.map = np.random.randint(n, size=self.size)
+        self.construct_image()
     
     def get_event(self, event):
         pass

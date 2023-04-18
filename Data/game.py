@@ -9,6 +9,7 @@ class AppleGame:
 
     def start_game(self):
         game = GameStates.GameController(ResourceManager.ORIGINAL_CAPTION)
+        pygame.display.set_icon(ResourceManager.GFX["UI"]["Smiley"])
         state_dictionary = {
             "Title": GameStates.MainMenu(),
             "Game": GameStates.Game()

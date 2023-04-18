@@ -24,11 +24,7 @@ class BaseSprite(pg.sprite.Sprite):
         self.old_position = self.exact_position[:]
 
     def reset_position(self, value, attribute="center"):
-        """
-        Set the sprite's location variables to a new point.  The attribute
-        argument can be specified to assign to a chosen attribute of the
-        sprite's rect.
-        """
+        #Relocate the sprite
         setattr(self.rect, attribute, value)
         self.exact_position = list(self.rect.center)
         self.old_position = self.exact_position[:]
