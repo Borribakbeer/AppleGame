@@ -42,6 +42,8 @@ class Camera(object):
     def check_within_range(self, objects):
         for obj in objects:
             if not "DRAWABLE" in obj.tags:
+                if "COLLECTION" in obj.tags:
+                    self.check_within_range(obj.get_objects())
                 continue
             if "GROUND" in obj.tags:
                 self.ground.add(obj)
@@ -81,8 +83,9 @@ class CameraRenderGroup(pg.sprite.Group):
     def custom_draw(self, surface):
         if self.sorting:
             for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
-                sprite.draw(surface)
+                if sprite.draw(surface):
+                    self.remove(sprite)
         else:
             for sprite in self.sprites():
-                sprite.draw(surface)
-
+                if sprite.draw(surface):
+                    self.remove(sprite)

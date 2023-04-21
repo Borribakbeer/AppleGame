@@ -31,6 +31,7 @@ class BaseSprite(pg.sprite.Sprite):
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
+        return True
 
 
 class Rigidbody(object):
@@ -73,3 +74,6 @@ class GameObject(BaseSprite):
 
     def get_key(self, receivedKeys):
         self.keys = receivedKeys
+
+    def Destroy(self):
+        raise Exception("No handling was implemeted for destruction of object")

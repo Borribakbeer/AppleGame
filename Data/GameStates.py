@@ -3,7 +3,7 @@ import Utils.ParentComponents
 from Utils import state_machine, Tools, ParentComponents
 from StateBuilders import MainMenuBuilder, GameBuilder
 from ResourceManager import *
-from Components import player, camera, tilemap_generator
+from Components import camera
 
 TIME_PER_UPDATE = 16.0  # Milliseconds
 
@@ -111,23 +111,14 @@ class MainMenu(state_machine.State):
 class Game(state_machine.State):
     def __init__(self):
         state_machine.State.__init__(self)
-        self.elements = self.make_elements()
-
         self.camera = camera.Camera()
+        self.elements = GameBuilder.make_elements(self.camera)
+
         self.keys = []
 
     def startup(self, now, persistant):
         self.persist = persistant
         self.start_time = now
-
-    def make_elements(self):
-        elements = Tools.GameObjectsCollection()
-        elements.add(player.Player(pg.math.Vector2(0,0)))
-
-
-
-        print(str(elements.get_objects()))
-        return elements    
 
     def update(self, keys, now, dt):
         self.now = now

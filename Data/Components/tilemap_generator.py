@@ -16,8 +16,11 @@ class TileChunk(pc.BaseSprite):
         self.pixelscale = UNIT_SCALE * pixelscale
 
         h, w = self.size
-        self.image = pg.Surface((w * UNIT_SCALE, h * UNIT_SCALE))
+        self.image = pg.Surface((w * UNIT_SCALE, h * UNIT_SCALE), pg.SRCALPHA, 32)
+        self.image = self.image.convert_alpha()
         self.rect = self.tileset.rect
+
+        self.destroyed = False
 
         self.exact_position = list(self.rect.topleft)
         self.old_position = self.exact_position[:]
@@ -25,16 +28,26 @@ class TileChunk(pc.BaseSprite):
         self.construct_image()
 
     def update(self, now, keys, dt):
+        if self.destroyed:
+            return self
         pass
 
     def draw(self, surface):
+        if self.destroyed:
+            return self
         pc.BaseSprite.reset_position(self, self.screenposition)
         pc.BaseSprite.draw(self, surface)
 
     def construct_image(self):
+        h, w = self.size
+        self.image = pg.Surface((w * UNIT_SCALE, h * UNIT_SCALE), pg.SRCALPHA, 32)
+        self.image = self.image.convert_alpha()
         m, n = self.map.shape
         for i in range(m):
             for j in range(n):
+                if self.map[i, j] == -1:
+                    continue
+
                 tile = self.tileset.tiles[self.map[i, j]]
                 self.image.blit(tile, (j*UNIT_SCALE, i*UNIT_SCALE))
 
@@ -55,9 +68,10 @@ class TileChunk(pc.BaseSprite):
         pass
 
     def get_key(self, keys):
-        if keys[pg.K_r]:
-            self.set_random()
         pass
+
+    def Destroy(self):
+        self.destroyed = True
 
     def __str__(self):
         return f'{self.__class__.__name__}: {self.size}'      
@@ -81,13 +95,10 @@ class Tileset(object):
         dx = self.size[0] + self.spacing
         dy = self.size[1] + self.spacing
 
-        print(UNIT_SCALE)
-        print(PIXELSCALE_IMAGES)
-        print(f"Rectsize: w:{w}, h:{h}")
-
         for x in range(x0, w, dx):
             for y in range(y0, h, dy):
-                tile = pg.Surface(self.size)
+                tile = pg.Surface(self.size, pg.SRCALPHA, 32)
+                tile = tile.convert_alpha()
                 tile.blit(self.image, (0, 0), (x, y, *self.size))
                 self.tiles.append(tile)
         pass

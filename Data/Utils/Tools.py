@@ -7,16 +7,29 @@ import pygame as pg
 class GameObjectsCollection(object):
     def __init__(self):
         self.objects = []
+        self.tags = {"COLLECTION"}
 
     def add(self, obj):
         self.objects.append(obj)
 
-    def remove(self, objToRemove):
+    def addCollection(self, collection):
+        objects = collection.get_objects()
+        for obj in objects:
+            self.add(obj)
+
+    def addIterable(self, iterable):
+        for obj in iterable:
+            self.add(obj)
+
+    def remove(self, objToRemove, destroy=False):
+        if(destroy):
+            objToRemove.Destroy()
         self.objects.remove(objToRemove)
 
     def update(self,now, keys, dt):
         for obj in self.objects:
-            obj.update(now, keys, dt)
+            if obj.update(now, keys, dt):
+                self.remove(obj)
 
     def draw(self, surface):
         for obj in self.objects:
