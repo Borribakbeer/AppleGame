@@ -74,7 +74,7 @@ class TileChunk(pc.BaseSprite):
         self.destroyed = True
 
     def __str__(self):
-        return f'{self.__class__.__name__}: {self.size}'      
+        return f'{self.__class__.__name__}: {self.size}, \n{self.map}'      
 
 class Tileset(object):
     def __init__(self, imageName, margin=1, spacing=1 , tilesize = pg.math.Vector2(PIXELSCALE_IMAGES, PIXELSCALE_IMAGES)):

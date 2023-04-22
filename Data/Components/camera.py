@@ -46,12 +46,15 @@ class Camera(object):
                     self.check_within_range(obj.get_objects())
                 continue
             if "GROUND" in obj.tags:
-                self.ground.add(obj)
+                direction = obj.worldposition - self.position
+                dist = math.sqrt(direction[0] ** 2 + direction[1] ** 2)
+                if (dist < rc.CAMERA_UNLOAD_DISTANCE) or ("ALWAYS_RENDER" in obj.tags):
+                    self.ground.add(obj)
                 continue
 
             direction = obj.worldposition - self.position
             dist = math.sqrt(direction[0] ** 2 + direction[1] ** 2)
-            if (dist < self.size * rc.ASPECT_RATIO * 1.3) or ("ALWAYS_RENDER" in obj.tags):
+            if (dist < rc.CAMERA_UNLOAD_DISTANCE) or ("ALWAYS_RENDER" in obj.tags):
                 self.objects.add(obj)
 
     def get_event(self, event):

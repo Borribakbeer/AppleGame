@@ -11,33 +11,50 @@ class TerrainGenerator():
     def __init__(self, camera):
         self.tags = {"COLLECTION"}
         self.camera = camera
+        self.lastCameraPosition = Vector2(1, 0)
         #Create chunks
         self.chunks = Tools.GameObjectsCollection()
-        self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), pg.math.Vector2(0, 0), (10, 10), PIXELSCALE_IMAGES))
-        self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), pg.math.Vector2(20, 0), (10, 10), PIXELSCALE_IMAGES))
-        self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), pg.math.Vector2(-20, 0), (10, 10), PIXELSCALE_IMAGES))
-        self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), pg.math.Vector2(0, 20), (10, 10), PIXELSCALE_IMAGES))
-        self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), pg.math.Vector2(0, -20), (10, 10), PIXELSCALE_IMAGES))
         
-        #Make chunks a default square
-        map = np.array([[0, 3, 3, 3, 3, 3, 3, 3, 3, 6],
-                        [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                        [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                        [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                        [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                        [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                        [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                        [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                        [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                        [2, 5, 5, 5, 5, 5, 5, 5, 5, 8]])
-        for chunk in self.chunks.get_objects():
-            chunk.set_map(map)
 
     def update(self, now, keys, dt):
-        for chunk in self.chunks.get_objects():
-            if math.dist(chunk.worldposition, self.camera.position) > CAMERA_UNLOAD_DISTANCE:
-                self.chunks.remove(chunk, True)
+        chunksToCheck = []
+        chunksToCheck += self.chunks.get_objects()
+        rounded_camera_position = pg.math.Vector2(self.camera.position.x, self.camera.position.y)
+        rounded_camera_position.x = round(rounded_camera_position.x / 2, -1)*2
+        rounded_camera_position.y = round(rounded_camera_position.y / 2, -1)*2
 
+        print(rounded_camera_position, len(self.chunks.get_objects())) 
+        
+
+        if(self.lastCameraPosition != rounded_camera_position):
+            #Set testposition to top left
+            rounded_camera_position.x -= round(40, -1)
+            rounded_camera_position.y -= round(40, -1)
+            #check every nessecary position
+            for x in range(5):
+                for y in range(5):
+                        chunksToCheck = self.check_position_for_chunk(chunksToCheck, pg.math.Vector2(rounded_camera_position.x + x * 20, rounded_camera_position.y + y * 20))
+
+            #Delete chunks that are outside of range
+            for chunk in chunksToCheck:
+                self.chunks.remove(chunk)
+
+            self.lastCameraPosition = rounded_camera_position
+
+        
+    def check_position_for_chunk(self, chunksToCheck, position):
+        found = False
+        for chunk in chunksToCheck:
+            if chunk.worldposition == position:
+                chunksToCheck.remove(chunk)
+                found = True
+                break
+        if not found:
+                self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), position, (10, 10), PIXELSCALE_IMAGES))
+
+        return chunksToCheck      
+        
+        return False
 
     def get_objects(self):
         return self.chunks.get_objects()
@@ -56,16 +73,11 @@ class TerrainGenerator():
         if keys[pg.K_SPACE]:
             for chunk in self.chunks.get_objects():
                 #Make chunks a default square
-                map = np.array([[0, 3, 3, 3, 3, 3, 3, 3, 3, 6],
-                                [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                                [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                                [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                                [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                                [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                                [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                                [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                                [1, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-                                [2, 5, 5, 5, 5, 5, 5, 5, 5, 8]])
+                map = np.array([[0, 3, 3, 3, 6],
+                                [1, 4, 4, 4, 7],
+                                [1, 4, 4, 4, 7],
+                                [1, 4, 4, 4, 7],
+                                [2, 5, 5, 5, 8]])
                 for chunk in self.chunks.get_objects():
                     chunk.set_map(map)
             
