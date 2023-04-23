@@ -37,6 +37,7 @@ class TerrainGenerator():
 
             #Delete chunks that are outside of range
             for chunk in chunksToCheck:
+                chunk.destroyed = True
                 self.chunks.remove(chunk)
 
             self.lastCameraPosition = rounded_camera_position
