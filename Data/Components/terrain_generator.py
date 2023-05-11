@@ -21,10 +21,7 @@ class TerrainGenerator():
         chunksToCheck += self.chunks.get_objects()
         rounded_camera_position = pg.math.Vector2(self.camera.position.x, self.camera.position.y)
         rounded_camera_position.x = round(rounded_camera_position.x / 2, -1)*2
-        rounded_camera_position.y = round(rounded_camera_position.y / 2, -1)*2
-
-        print(rounded_camera_position, len(self.chunks.get_objects())) 
-        
+        rounded_camera_position.y = round(rounded_camera_position.y / 2, -1)*2        
 
         if(self.lastCameraPosition != rounded_camera_position):
             #Set testposition to top left
@@ -51,7 +48,7 @@ class TerrainGenerator():
                 found = True
                 break
         if not found:
-                self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), position, (10, 10), PIXELSCALE_IMAGES))
+                self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), position, (10, 10), PIXELSCALE_IMAGES, 4))
 
         return chunksToCheck      
         

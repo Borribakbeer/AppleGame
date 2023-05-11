@@ -34,9 +34,6 @@ class Camera(object):
         self.ground.custom_draw(surface)
         self.objects.custom_draw(surface)
 
-        print("AMount of tiles: " + str(len(self.ground)))
-
-
     def set_objects_world_to_screen_space(self, objects):
         for obj in objects:
             obj.screenposition = self.world_to_screen_space(obj.worldposition)

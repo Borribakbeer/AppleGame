@@ -4,7 +4,7 @@ from Utils import ParentComponents as pc
 import numpy as np
 
 class TileChunk(pc.BaseSprite):
-    def __init__(self, tileset, pos, size=(8, 8), pixelscale = PIXELSCALE_IMAGES, *groups):
+    def __init__(self, tileset, pos, size=(8, 8), pixelscale = PIXELSCALE_IMAGES, defaultTile = 0, *groups):
         pg.sprite.Sprite.__init__(self, *groups)
 
         self.worldposition = pos
@@ -25,7 +25,8 @@ class TileChunk(pc.BaseSprite):
         self.exact_position = list(self.rect.topleft)
         self.old_position = self.exact_position[:]
 
-        self.construct_image()
+        self.set_default(defaultTile);
+
 
     def update(self, now, keys, dt):
         if self.destroyed:
@@ -54,6 +55,13 @@ class TileChunk(pc.BaseSprite):
     def set_zero(self):
         self.map = np.zeros(self.size, dtype=int)
         self.construct_image()
+
+    def set_default(self, defaultTile):
+        self.map = np.multiply(np.ones(self.size, dtype=int), defaultTile) 
+        print(self.map)
+
+        self.construct_image()
+
 
     def set_map(self, map):
         self.map = map
