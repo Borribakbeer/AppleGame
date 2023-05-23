@@ -3,7 +3,7 @@ This module initializes the display and creates dictionaries of resources.
 Also contained are various constants used throughout the program.
 """
 
-import os
+import os, json
 import pygame as pg
 
 from Utils import Tools
@@ -62,3 +62,24 @@ def graphics_from_directories(directories):
 
 _SUB_DIRECTORIES = ["Misc", "Debug", "Tilemaps", "UI"]
 GFX = graphics_from_directories(_SUB_DIRECTORIES)
+
+def load_chunk_from_position(position, layer):
+    #load file
+    file = open(os.path.join("Resources", "World", "World.json"),)
+    worldData = json.load(file)
+    
+    #find layer
+    for layer in worldData['layers']:
+        if layer['name'] == layer:
+            chunkLayer = layer
+            
+    
+    #find chunk in layer
+    for chunk in chunkLayer['chunks']:
+        if(chunk['x'] == position.x):
+            if chunk['y'] == position.y:
+                print(chunk)
+
+    pass
+
+load_chunk_from_position(pg.Vector2(0, -10), "Eastwood")
