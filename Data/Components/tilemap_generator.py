@@ -4,7 +4,7 @@ from Utils import ParentComponents as pc
 import numpy as np
 
 class TileChunk(pc.BaseSprite):
-    def __init__(self, tileset, pos, size=(8, 8), pixelscale = PIXELSCALE_IMAGES, defaultTile = 0, *groups):
+    def __init__(self, tileset, pos, size=(8, 8), pixelscale = PIXELSCALE_IMAGES, tilemapLayer = 'Ground', *groups):
         pg.sprite.Sprite.__init__(self, *groups)
 
         self.worldposition = pos
@@ -25,8 +25,8 @@ class TileChunk(pc.BaseSprite):
         self.exact_position = list(self.rect.topleft)
         self.old_position = self.exact_position[:]
 
-        self.set_default(defaultTile);
-
+        self.set_map(pos, tilemapLayer)
+        
 
     def update(self, now, keys, dt):
         if self.destroyed:
@@ -44,27 +44,19 @@ class TileChunk(pc.BaseSprite):
         self.image = pg.Surface((w * UNIT_SCALE, h * UNIT_SCALE), pg.SRCALPHA, 32)
         self.image = self.image.convert_alpha()
         m, n = self.map.shape
+        counter = 0
         for i in range(m):
             for j in range(n):
-                if self.map[i, j] == -1:
+                if self.map[counter] == -1:
                     continue
 
-                tile = self.tileset.tiles[self.map[i, j]]
+                tile = self.tileset.tiles[self.map[counter]]
                 self.image.blit(tile, (j*UNIT_SCALE, i*UNIT_SCALE))
-
-    def set_zero(self):
-        self.map = np.zeros(self.size, dtype=int)
-        self.construct_image()
-
-    def set_default(self, defaultTile):
-        self.map = np.multiply(np.ones(self.size, dtype=int), defaultTile) 
-        print(self.map)
-
-        self.construct_image()
+                counter += 1
 
 
-    def set_map(self, map):
-        self.map = map
+    def set_map(self, position, tilemapLayer):
+        self.map = load_chunk_from_position(position, tilemapLayer)
         self.construct_image()
 
     def set_random(self):

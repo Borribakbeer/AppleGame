@@ -63,23 +63,30 @@ def graphics_from_directories(directories):
 _SUB_DIRECTORIES = ["Misc", "Debug", "Tilemaps", "UI"]
 GFX = graphics_from_directories(_SUB_DIRECTORIES)
 
-def load_chunk_from_position(position, layer):
+def load_chunk_from_position(position, layerName):
     #load file
     file = open(os.path.join("Resources", "World", "World.json"),)
     worldData = json.load(file)
     
     #find layer
+    failedSearch = False
     for layer in worldData['layers']:
-        if layer['name'] == layer:
+        if layer['name'] == layerName:
             chunkLayer = layer
-            
+            failedSearch = True
     
+    if failedSearch:
+        print("Error: Failed to locate layer " + layerName + " in World.json")
+        return [0] * 100
+        
     #find chunk in layer
     for chunk in chunkLayer['chunks']:
         if(chunk['x'] == position.x):
             if chunk['y'] == position.y:
-                print(chunk)
+                return chunk['data']
+            
+    if failedSearch:
+        print("Error: Failed to locate chunk at " + position + " in World.json")
+        return [0] * 100
 
     pass
-
-load_chunk_from_position(pg.Vector2(0, -10), "Eastwood")

@@ -52,7 +52,6 @@ class TerrainGenerator():
 
         return chunksToCheck      
         
-        return False
 
     def get_objects(self):
         return self.chunks.get_objects()
@@ -64,18 +63,5 @@ class TerrainGenerator():
         pass
 
     def get_key(self, keys):
-        if keys[pg.K_r]:
-            for chunk in self.chunks.get_objects():
-                chunk.set_random()   
-
-        if keys[pg.K_SPACE]:
-            for chunk in self.chunks.get_objects():
-                #Make chunks a default square
-                map = np.array([[0, 3, 3, 3, 6],
-                                [1, 4, 4, 4, 7],
-                                [1, 4, 4, 4, 7],
-                                [1, 4, 4, 4, 7],
-                                [2, 5, 5, 5, 8]])
-                for chunk in self.chunks.get_objects():
-                    chunk.set_map(map)
+        pass
             
