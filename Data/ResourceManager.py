@@ -69,24 +69,26 @@ def load_chunk_from_position(position, layerName):
     worldData = json.load(file)
     
     #find layer
-    failedSearch = False
+    failedSearch = True
     for layer in worldData['layers']:
         if layer['name'] == layerName:
             chunkLayer = layer
-            failedSearch = True
+            failedSearch = False
     
     if failedSearch:
         print("Error: Failed to locate layer " + layerName + " in World.json")
         return [0] * 100
-        
+    
+    failedSearch = True
     #find chunk in layer
     for chunk in chunkLayer['chunks']:
-        if(chunk['x'] == position.x):
-            if chunk['y'] == position.y:
+        if(chunk['x'] == position.x / 2):
+            if chunk['y'] == position.y / 2:
+                failedSearch = False
                 return chunk['data']
             
     if failedSearch:
-        print("Error: Failed to locate chunk at " + position + " in World.json")
+        print("Error: Failed to locate chunk at " + str(position / 2) + " in World.json")
         return [0] * 100
 
     pass

@@ -48,7 +48,7 @@ class TerrainGenerator():
                 found = True
                 break
         if not found:
-                self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), position, (10, 10), PIXELSCALE_IMAGES, 4))
+                self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset("Grass", 0, 0), position, (10, 10), PIXELSCALE_IMAGES, "Ground"))
 
         return chunksToCheck      
         

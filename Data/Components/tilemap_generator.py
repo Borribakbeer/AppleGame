@@ -10,7 +10,7 @@ class TileChunk(pc.BaseSprite):
         self.worldposition = pos
         self.size = size
         self.tileset = tileset
-        self.map = np.zeros(size, dtype=int)
+        self.map = [0] * 100
         self.tags = {"DRAWABLE", "GROUND"}
 
         self.pixelscale = UNIT_SCALE * pixelscale
@@ -43,20 +43,21 @@ class TileChunk(pc.BaseSprite):
         h, w = self.size
         self.image = pg.Surface((w * UNIT_SCALE, h * UNIT_SCALE), pg.SRCALPHA, 32)
         self.image = self.image.convert_alpha()
-        m, n = self.map.shape
         counter = 0
-        for i in range(m):
-            for j in range(n):
-                if self.map[counter] == -1:
+        for i in range(10):
+            for j in range(10):
+                if self.map[counter] == 0:
+                    counter += 1
                     continue
 
-                tile = self.tileset.tiles[self.map[counter]]
+                tile = self.tileset.tiles[self.map[counter] - 1]
                 self.image.blit(tile, (j*UNIT_SCALE, i*UNIT_SCALE))
                 counter += 1
-
+        print(counter)
 
     def set_map(self, position, tilemapLayer):
         self.map = load_chunk_from_position(position, tilemapLayer)
+        print(self.map)
         self.construct_image()
 
     def set_random(self):
