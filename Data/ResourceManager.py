@@ -63,6 +63,8 @@ def graphics_from_directories(directories):
 _SUB_DIRECTORIES = ["Misc", "Debug", "Tilemaps", "UI"]
 GFX = graphics_from_directories(_SUB_DIRECTORIES)
 
+import Utils.WorldData as WorldData
+
 def load_chunk_from_position(position, layerName):
     #load file
     file = open(os.path.join("Resources", "World", "World.json"),)

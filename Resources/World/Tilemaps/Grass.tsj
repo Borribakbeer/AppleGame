@@ -1,0 +1,64 @@
+{ "columns":3,
+ "image":"..\/..\/Graphics\/Tilemaps\/Grass.png",
+ "imageheight":48,
+ "imagewidth":48,
+ "margin":0,
+ "name":"Grass",
+ "spacing":0,
+ "tilecount":9,
+ "tiledversion":"1.10.1",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10",
+ "wangsets":[
+        {
+         "colors":[
+                {
+                 "color":"#ff0000",
+                 "name":"",
+                 "probability":1,
+                 "tile":-1
+                }],
+         "name":"Grass",
+         "tile":-1,
+         "type":"mixed",
+         "wangtiles":[
+                {
+                 "tileid":0,
+                 "wangid":[0, 0, 1, 1, 1, 0, 0, 0]
+                }, 
+                {
+                 "tileid":1,
+                 "wangid":[0, 0, 1, 1, 1, 1, 1, 0]
+                }, 
+                {
+                 "tileid":2,
+                 "wangid":[0, 0, 0, 0, 1, 1, 1, 0]
+                }, 
+                {
+                 "tileid":3,
+                 "wangid":[1, 1, 1, 1, 1, 0, 0, 0]
+                }, 
+                {
+                 "tileid":4,
+                 "wangid":[1, 1, 1, 1, 1, 1, 1, 1]
+                }, 
+                {
+                 "tileid":5,
+                 "wangid":[1, 0, 0, 0, 1, 1, 1, 1]
+                }, 
+                {
+                 "tileid":6,
+                 "wangid":[1, 1, 1, 0, 0, 0, 0, 0]
+                }, 
+                {
+                 "tileid":7,
+                 "wangid":[1, 1, 1, 0, 0, 0, 1, 1]
+                }, 
+                {
+                 "tileid":8,
+                 "wangid":[1, 0, 0, 0, 0, 0, 1, 1]
+                }]
+        }]
+}
