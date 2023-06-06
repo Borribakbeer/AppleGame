@@ -65,15 +65,15 @@ GFX = graphics_from_directories(_SUB_DIRECTORIES)
 
 import Utils.WorldData as WorldData
 
+file = open(os.path.join("Resources", "World", "World.json"),)
+WORLDDATA = WorldData.Object(json.load(file))
+
+
 def load_chunk_from_position(position, layerName):
-    #load file
-    file = open(os.path.join("Resources", "World", "World.json"),)
-    worldData = json.load(file)
-    
     #find layer
     failedSearch = True
-    for layer in worldData['layers']:
-        if layer['name'] == layerName:
+    for layer in WORLDDATA.layers:
+        if layer.layerName == layerName:
             chunkLayer = layer
             failedSearch = False
     
@@ -83,11 +83,11 @@ def load_chunk_from_position(position, layerName):
     
     failedSearch = True
     #find chunk in layer
-    for chunk in chunkLayer['chunks']:
-        if(chunk['x'] == position.x / 2):
-            if chunk['y'] == -position.y / 2:
+    for chunk in chunkLayer.chunks:
+        if(chunk.position.x == position.x / 2):
+            if chunk.position.y == -position.y / 2:
                 failedSearch = False
-                return chunk['data']
+                return chunk.data
             
     if failedSearch:
         print("Error: Failed to locate chunk at " + str(position / 2) + " in World.json")

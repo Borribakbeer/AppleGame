@@ -76,30 +76,42 @@ class TileChunk(pc.BaseSprite):
         return f'{self.__class__.__name__}: {self.size}, \n{self.map}'      
 
 class Tileset(object):
-    def __init__(self, imageName, margin=1, spacing=1 , tilesize = pg.math.Vector2(PIXELSCALE_IMAGES, PIXELSCALE_IMAGES)):
+    def __init__(self, tilesets, margin=1, spacing=1 , tilesize = pg.math.Vector2(PIXELSCALE_IMAGES, PIXELSCALE_IMAGES)):
         self.tiles = []
-        self.image = GFX["Tilemaps"][imageName]   
-        w, h = self.image.get_rect().size    
+        self.tilesets = tilesets
         self.size = (UNIT_SCALE, UNIT_SCALE)
-        self.image = pg.transform.scale(self.image, (round((w / tilesize.x)*UNIT_SCALE), round((h / tilesize.y)*UNIT_SCALE)))
         self.margin = margin
         self.spacing = spacing
-        self.rect = self.image.get_rect()
-        self.load()
+        self.load(tilesize)
 
-    def load(self):
+    def load(self, tilesize):
         self.tiles = []
-        x0 = y0 = self.margin
-        w, h = self.rect.size
-        dx = self.size[0] + self.spacing
-        dy = self.size[1] + self.spacing
 
-        for y in range(y0, h, dy):
-            for x in range(x0, w, dx):
-                tile = pg.Surface(self.size, pg.SRCALPHA, 32)
-                tile = tile.convert_alpha()
-                tile.blit(self.image, (0, 0), (x, y, *self.size))
-                self.tiles.append(tile)
-        pass
+        for tileset in self.tilesets:
+            self.image = get_image(os.path.join(tileset.imageSource)); 
+            w, h = self.image.get_rect().size    
+            self.image = pg.transform.scale(self.image, (round((w / tilesize.x)*UNIT_SCALE), round((h / tilesize.y)*UNIT_SCALE)))
+            self.rect = self.image.get_rect()
+
+
+            x0 = y0 = self.margin
+            w, h = self.rect.size
+            dx = self.size[0] + self.spacing
+            dy = self.size[1] + self.spacing
+
+            for y in range(y0, h, dy):
+                for x in range(x0, w, dx):
+                    tile = pg.Surface(self.size, pg.SRCALPHA, 32)
+                    tile = tile.convert_alpha()
+                    tile.blit(self.image, (0, 0), (x, y, *self.size))
+                    self.tiles.append(tile)
+            pass
 
     
+def get_image(path):
+    img = pg.image.load(path)
+    if img.get_alpha():
+        img = img.convert_alpha()
+    else:
+        img = img.convert()
+    return img

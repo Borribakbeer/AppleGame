@@ -16,7 +16,3 @@ class AppleGame:
         }
         game.state_machine.setup_states(state_dictionary, "Title")
         game.main()
-
-
-
-
