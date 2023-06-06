@@ -53,11 +53,9 @@ class TileChunk(pc.BaseSprite):
                 tile = self.tileset.tiles[self.map[counter] - 1]
                 self.image.blit(tile, (j*UNIT_SCALE, i*UNIT_SCALE))
                 counter += 1
-        print(counter)
 
     def set_map(self, position, tilemapLayer):
         self.map = load_chunk_from_position(position, tilemapLayer)
-        print(self.map)
         self.construct_image()
 
     def set_random(self):
@@ -96,8 +94,8 @@ class Tileset(object):
         dx = self.size[0] + self.spacing
         dy = self.size[1] + self.spacing
 
-        for x in range(x0, w, dx):
-            for y in range(y0, h, dy):
+        for y in range(y0, h, dy):
+            for x in range(x0, w, dx):
                 tile = pg.Surface(self.size, pg.SRCALPHA, 32)
                 tile = tile.convert_alpha()
                 tile.blit(self.image, (0, 0), (x, y, *self.size))

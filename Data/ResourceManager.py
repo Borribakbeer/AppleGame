@@ -83,7 +83,7 @@ def load_chunk_from_position(position, layerName):
     #find chunk in layer
     for chunk in chunkLayer['chunks']:
         if(chunk['x'] == position.x / 2):
-            if chunk['y'] == position.y / 2:
+            if chunk['y'] == -position.y / 2:
                 failedSearch = False
                 return chunk['data']
             
