@@ -53,6 +53,8 @@ class TileChunk(pc.BaseSprite):
                 tile = self.tileset.tiles[self.map[counter] - 1]
                 self.image.blit(tile, (j*UNIT_SCALE, i*UNIT_SCALE))
                 counter += 1
+                
+        self.rect = self.image.get_rect()
 
     def set_map(self, position, tilemapLayer):
         self.map = load_chunk_from_position(position, tilemapLayer)

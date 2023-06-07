@@ -91,3 +91,4 @@ class CameraRenderGroup(pg.sprite.Group):
             for sprite in self.sprites():
                 if sprite.draw(surface):
                     self.remove(sprite)
+        

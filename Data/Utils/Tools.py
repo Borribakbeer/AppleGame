@@ -11,6 +11,7 @@ class GameObjectsCollection(object):
 
     def add(self, obj):
         self.objects.append(obj)
+        return obj
 
     def addCollection(self, collection):
         objects = collection.get_objects()

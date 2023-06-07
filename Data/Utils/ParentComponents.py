@@ -34,6 +34,19 @@ class BaseSprite(pg.sprite.Sprite):
         return True
 
 
+class Collider:
+    def __init__(self, collisionType):
+        self.collisionType = collisionType
+        
+    def CollideRect(self, rect):
+        if(self.collisionType == "None"):
+            return False
+        elif(self.collisionType == "Box"):
+            return self.rect.colliderect(rect)
+        else:
+            print("Collisiontype: '" + self.collisionType + "' is not implemented yet")
+            return False
+
 class Rigidbody(object):
     def __init__(self, pos):
         self.acceleration = pg.math.Vector2()
@@ -42,14 +55,18 @@ class Rigidbody(object):
 
     def add_force(self, force):
         self.velocity += force
+        
 
     def update(self, dt):
+        if(self.collisions != None):
+            print("Colliding is: " + str(Collider.CollideRect(self, self.collisions.rect)))
+        
         self.velocity = [self.velocity[x] + self.acceleration[x] for x in range(len(self.acceleration))]
         self.worldposition += pg.math.Vector2(self.velocity) * (dt / 1000)
 
 
 class GameObject(BaseSprite):
-    def __init__(self, folder, name, pos, size, *groups):
+    def __init__(self, folder, name, pos, size, collider = "None", *groups):
         self.size = size
         self.worldposition = pos
 

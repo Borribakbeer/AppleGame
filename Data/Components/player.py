@@ -12,8 +12,10 @@ class Player(pc.GameObject, pc.Rigidbody):
     def __init__(self, pos):
         pc.Rigidbody.__init__(self, pos)
         pc.GameObject.__init__(self, "Misc", "Heart", pos, (1, 1))
+        pc.Collider.__init__(self, "Box")
         self.worldposition = pos
         self.screenposition = [0, 0]
+        self.collision = []
         self.tags.add("Player")
 
     def update(self, now, keys, dt):
