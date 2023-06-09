@@ -37,12 +37,13 @@ class BaseSprite(pg.sprite.Sprite):
 class Collider:
     def __init__(self, collisionType):
         self.collisionType = collisionType
+        self.collisionrect = None
         
     def CollideRect(self, rect):
         if(self.collisionType == "None"):
             return False
         elif(self.collisionType == "Box"):
-            return self.rect.colliderect(rect)
+            return self.collisionrect.colliderect(rect)
         else:
             print("Collisiontype: '" + self.collisionType + "' is not implemented yet")
             return False
@@ -58,19 +59,32 @@ class Rigidbody(object):
         
 
     def update(self, dt):
-        if(self.collisions != None):
-            print("Colliding is: " + str(Collider.CollideRect(self, self.collisions.rect)))
-        
+        nextWorldPosition = pg.Vector2(self.worldposition.x, self.worldposition.y)
         self.velocity = [self.velocity[x] + self.acceleration[x] for x in range(len(self.acceleration))]
-        self.worldposition += pg.math.Vector2(self.velocity) * (dt / 1000)
+        nextWorldPosition += pg.math.Vector2(self.velocity) * (dt / 1000)
+        
+        self.collisionrect = pg.Rect(self.rect)
+        setattr(self.collisionrect, "center", nextWorldPosition)
+        
+        if(self.colliders != None):
+            for collider in self.colliders:
+                if(isinstance(collider, type(Collider))):
+                    if Collider.CollideRect(self, collider.rect):
+                        return
+        #THE FOLLOWING CODE IS ONLY EXECUTED WHEN THERE HAS NOT BEEN ANY COLLISION
+        
+        self.worldposition = nextWorldPosition
+        
 
 
 class GameObject(BaseSprite):
-    def __init__(self, folder, name, pos, size, collider = "None", *groups):
+    def __init__(self, folder, name, pos, size, collider = "None", colliders = [], *groups):
         self.size = size
         self.worldposition = pos
 
-        self.image = resources.GFX[folder][name]        
+        self.image = resources.GFX[folder][name]   
+        
+        self.colliders = colliders     
 
         BaseSprite.__init__(self, pos, size, *groups)
 
@@ -94,3 +108,6 @@ class GameObject(BaseSprite):
 
     def Destroy(self):
         raise Exception("No handling was implemeted for destruction of object")
+    
+    def add_tag(self, tag):
+        self.tags.add(tag)

@@ -113,6 +113,10 @@ class Game(state_machine.State):
         state_machine.State.__init__(self)
         self.camera = camera.Camera()
         self.elements = GameBuilder.make_elements(self.camera)
+        self.colliders = []
+        for collider in self.elements.get_objects():
+            if("Collider" in collider.tags):
+                self.colliders.append(collider)
 
         self.keys = []
 
@@ -122,7 +126,7 @@ class Game(state_machine.State):
 
     def update(self, keys, now, dt):
         self.now = now
-        self.elements.update(now, keys, dt)
+        self.elements.update(now, keys, self.colliders, dt)
 
     def draw(self, surface, interpolate):
         self.camera.draw_frame(surface, self.elements)

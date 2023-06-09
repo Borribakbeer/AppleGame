@@ -9,7 +9,6 @@ class Camera(object):
     def __init__(self):
         self.position = pg.math.Vector2()
         self.player = None
-        self.size = rc.CAMERA_ZOOM # how many units the y axis of the camera is long
         self.velocity = pg.math.Vector2()
         self.objects = CameraRenderGroup()
         self.ground = CameraRenderGroup(False)
@@ -66,8 +65,11 @@ class Camera(object):
         # scaleY        
         # 0                     
         # -scaleY / -scaleX     0   scaleX
-        scaleY = self.size
-        scaleX = (self.size / rc.SCREEN_SIZE[1]) * rc.SCREEN_SIZE[0]
+        
+        size = rc.CAMERA_ZOOM;
+        
+        scaleY = size
+        scaleX = (size / rc.SCREEN_SIZE[1]) * rc.SCREEN_SIZE[0]
         direction = coords - self.position
         
         direction[0] = (direction[0] + scaleX) / (2 * scaleX)

@@ -27,9 +27,9 @@ class GameObjectsCollection(object):
             objToRemove.Destroy()
         self.objects.remove(objToRemove)
 
-    def update(self,now, keys, dt):
+    def update(self,now, keys, colliders, dt):
         for obj in self.objects:
-            if obj.update(now, keys, dt):
+            if obj.update(now, keys, colliders, dt):
                 self.remove(obj)
 
     def draw(self, surface):
