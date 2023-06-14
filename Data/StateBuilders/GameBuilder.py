@@ -12,6 +12,6 @@ def make_elements(camera):
     pc.Collider.__init__(grid, "Mask")
     
     elements.add(terrain_generator.TerrainGenerator(camera, "Ground"))
-    elements.add(terrain_generator.TerrainGenerator(camera, "Objects"))
+    elements.add(terrain_generator.TerrainGenerator(camera, "Objects", True))
 
     return elements    

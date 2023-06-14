@@ -8,13 +8,16 @@ import numpy as np
 import math
 
 class TerrainGenerator():
-    def __init__(self, camera, tilemapLayer = "Ground"):
+    def __init__(self, camera, tilemapLayer = "Ground", hasCollision = False):
         self.tags = {"COLLECTION"}
+        if hasCollision:
+             self.tags.add("Collider")
         self.camera = camera
         self.lastCameraPosition = Vector2(1, 0)
         self.tilemapLayer = tilemapLayer
         #Create chunks
         self.chunks = Tools.GameObjectsCollection()
+        self.hasCollision = hasCollision
         
 
     def update(self, now, keys, GameInfo, dt):
@@ -49,7 +52,7 @@ class TerrainGenerator():
                 found = True
                 break
         if not found:
-                self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset(WORLDDATA.tilesets, 0, 0), position, (10, 10), PIXELSCALE_IMAGES, self.tilemapLayer))
+                self.chunks.add(tilemap_generator.TileChunk(tilemap_generator.Tileset(WORLDDATA.tilesets, 0, 0), position, (10, 10), PIXELSCALE_IMAGES, self.tilemapLayer, self.hasCollision))
 
         return chunksToCheck      
         
@@ -64,5 +67,5 @@ class TerrainGenerator():
         pass
 
     def get_key(self, keys):
-        pass
+        self.chunks.get_keys(keys)
             

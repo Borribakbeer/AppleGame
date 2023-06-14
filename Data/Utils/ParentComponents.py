@@ -52,8 +52,9 @@ class Collider:
             return self.collisionrect.colliderect(collider.collisionrect)
         elif(self.collisionType == "Mask"):
             if(pg.Vector2.distance_to(self.nextWorldPosition, collider.worldposition) < self.radius + collider.radius):
-                offset = pg.Vector2(collider.collisionrect.center) - pg.Vector2(self.collisionrect.center)
-                return self.mask.overlap(collider.mask, offset)
+                offset = pg.Vector2(collider.collisionrect.topleft) - pg.Vector2(self.collisionrect.topleft)
+                print(str(self.mask.overlap_area(collider.mask, offset)))
+                return self.mask.overlap_area(collider.mask, offset) > 0
             else:
                 return False
         elif(self.collisionType == "Radius"):
@@ -84,14 +85,24 @@ class Rigidbody(object):
         setattr(self.collisionrect, "center", GameInfo.camera.world_to_screen_space(self.nextWorldPosition))
         
         if(GameInfo.colliders != None):
-            for collider in GameInfo.colliders:
+            self.check_collisions(GameInfo.colliders)
+            
+
+    def check_collisions(self, colliders):
+        for collider in colliders:
+                if("COLLECTION" in collider.tags):
+                    if self.check_collisions(collider.get_objects()):
+                        return
+                    continue
                 if(collider == self): 
                     continue
                 if Collider.Collide(self, collider):
-                    return
+                    return True
         #THE FOLLOWING CODE IS ONLY EXECUTED WHEN THERE HAS NOT BEEN ANY COLLISION
         
         self.worldposition = self.nextWorldPosition
+
+        return False
         
 
 

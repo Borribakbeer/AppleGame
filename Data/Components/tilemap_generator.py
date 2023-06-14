@@ -4,8 +4,10 @@ from Utils import ParentComponents as pc
 import numpy as np
 
 class TileChunk(pc.BaseSprite):
-    def __init__(self, tileset, pos, size=(8, 8), pixelscale = PIXELSCALE_IMAGES, tilemapLayer = 'Ground', *groups):
+    def __init__(self, tileset, pos, size=(8, 8), pixelscale = PIXELSCALE_IMAGES, tilemapLayer = 'Ground', hasCollision = False, *groups):
         pg.sprite.Sprite.__init__(self, *groups)
+
+        self.drawhitbox = False
 
         self.worldposition = pos
         self.size = size
@@ -26,6 +28,9 @@ class TileChunk(pc.BaseSprite):
         self.old_position = self.exact_position[:]
 
         self.set_map(pos, tilemapLayer)
+
+        if(hasCollision):
+            pc.Collider.__init__(self, "Mask")
         
 
     def update(self, now, keys, dt):
@@ -38,6 +43,17 @@ class TileChunk(pc.BaseSprite):
             return self
         pc.BaseSprite.reset_position(self, self.screenposition)
         pc.BaseSprite.draw(self, surface)
+
+        if self.drawhitbox:
+            olist = self.mask.outline()
+            offsetted_olist = []
+            for pixelPos in olist:
+                pixelPos = (pixelPos[0] + self.rect.topleft[0], pixelPos[1] + self.rect.topleft[1])
+                offsetted_olist.append(pixelPos)
+            if len(offsetted_olist) > 0 and "Collider" in self.tags:
+                pg.draw.lines(surface,(255,255,255),1,offsetted_olist, 2)
+        
+        
 
     def construct_image(self):
         h, w = self.size
@@ -53,12 +69,14 @@ class TileChunk(pc.BaseSprite):
                 tile = self.tileset.tiles[self.map[counter] - 1]
                 self.image.blit(tile, (j*UNIT_SCALE, i*UNIT_SCALE))
                 counter += 1
-                
         self.rect = self.image.get_rect()
+        self.mask = pg.mask.from_surface(self.image)
+
 
     def set_map(self, position, tilemapLayer):
         self.map = load_chunk_from_position(position, tilemapLayer)
         self.construct_image()
+
 
     def set_random(self):
         n = len(self.tileset.tiles)
@@ -69,6 +87,11 @@ class TileChunk(pc.BaseSprite):
         pass
 
     def get_key(self, keys):
+        if keys[pg.K_F7]:
+            self.drawhitbox = True
+        else:
+            self.drawhitbox = False
+        
         pass
 
     def Destroy(self):
@@ -76,6 +99,9 @@ class TileChunk(pc.BaseSprite):
 
     def __str__(self):
         return f'{self.__class__.__name__}: {self.size}, \n{self.map}'      
+    
+    def add_tag(self, tag):
+        self.tags.add(tag)
 
 class Tileset(object):
     def __init__(self, tilesets, margin=1, spacing=1 , tilesize = pg.math.Vector2(PIXELSCALE_IMAGES, PIXELSCALE_IMAGES)):
