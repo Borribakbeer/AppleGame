@@ -30,10 +30,10 @@ class TerrainGenerator():
         if(self.lastCameraPosition != rounded_camera_position):
             #Set testposition to top left
             rounded_camera_position.x -= round(40, -1)
-            rounded_camera_position.y -= round(40, -1)
+            rounded_camera_position.y -= round(20, -1)
             #check every nessecary position
             for x in range(5):
-                for y in range(5):
+                for y in range(4):
                         chunksToCheck = self.check_position_for_chunk(chunksToCheck, pg.math.Vector2(rounded_camera_position.x + x * 20, rounded_camera_position.y + y * 20))
 
             #Delete chunks that are outside of range
