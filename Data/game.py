@@ -12,7 +12,9 @@ class AppleGame:
         pygame.display.set_icon(ResourceManager.GFX["UI"]["Smiley"])
         state_dictionary = {
             "Title": GameStates.MainMenu(),
-            "Game": GameStates.Game()
+            "Game": GameStates.Game(),
+            "Paused": GameStates.Paused(),
+            "Winscreen": GameStates.Winscreen()
         }
         game.state_machine.setup_states(state_dictionary, "Title")
         game.main()

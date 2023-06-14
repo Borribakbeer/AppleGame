@@ -1,7 +1,7 @@
 import pygame as pg
 import Utils.ParentComponents
 from Utils import state_machine, Tools, ParentComponents
-from StateBuilders import MainMenuBuilder, GameBuilder
+from StateBuilders import MainMenuBuilder, GameBuilder, PausedBuilder, WinscreenBuilder
 from ResourceManager import *
 from Components import camera
 
@@ -136,7 +136,81 @@ class Game(state_machine.State):
         if event.type == pg.KEYDOWN:
             self.keys = pg.key.get_pressed()
             self.elements.get_keys(self.keys)
+
+            if(self.keys[pg.K_ESCAPE]):
+                self.next = "Paused"
+                self.done = True
+            elif(self.keys[pg.K_F10]):
+                self.next = "Winscreen"
+                self.done = True
+
         elif event.type == pg.KEYUP:
             self.keys = pg.key.get_pressed()
             self.elements.get_keys(self.keys)
         self.camera.get_event(event)
+
+
+class Paused(state_machine.State):
+    def __init__(self):
+        state_machine.State.__init__(self)
+        self.elements = self.make_elements()
+
+    def startup(self, now, persistant):
+        self.persist = persistant
+        self.start_time = now
+
+    def make_elements(self):
+        group = pg.sprite.LayeredUpdates()
+        group.add(PausedBuilder.PressSpace(), PausedBuilder.PausedText(), layer=1)
+        return group
+
+    def update(self, keys, now, dt):
+        """Updates the title screen."""
+        self.now = now
+        self.elements.update(now)
+
+    def draw(self, surface, interpolate):
+        surface.fill((100, 50, 50))
+        self.elements.draw(surface)
+
+    def get_event(self, event):
+        """
+        Get events from Control.  Currently changes to next state on any key
+        press.
+        """
+        if event.type == pg.KEYDOWN:
+            self.next = "Game"
+            self.done = True
+
+
+class Winscreen(state_machine.State):
+    def __init__(self):
+        state_machine.State.__init__(self)
+        self.elements = self.make_elements()
+
+    def startup(self, now, persistant):
+        self.persist = persistant
+        self.start_time = now
+
+    def make_elements(self):
+        group = pg.sprite.LayeredUpdates()
+        group.add(MainMenuBuilder.AnyKey(), MainMenuBuilder.TitleImage(), layer=1)
+        return group
+
+    def update(self, keys, now, dt):
+        """Updates the title screen."""
+        self.now = now
+        self.elements.update(now)
+
+    def draw(self, surface, interpolate):
+        surface.fill((50, 100, 200))
+        self.elements.draw(surface)
+
+    def get_event(self, event):
+        """
+        Get events from Control.  Currently changes to next state on any key
+        press.
+        """
+        if event.type == pg.KEYDOWN:
+            self.next = "Game"
+            self.done = True
