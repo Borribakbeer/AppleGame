@@ -10,9 +10,9 @@ import numpy as np
 
 class Player(pc.GameObject, pc.Rigidbody):
     def __init__(self, pos):
-        pc.Rigidbody.__init__(self, pos)
         pc.GameObject.__init__(self, "Misc", "Heart", pos, (1, 1))
-        pc.Collider.__init__(self, "Box")
+        pc.Rigidbody.__init__(self, pos)
+        pc.Collider.__init__(self, "Mask")
         self.worldposition = pos
         self.screenposition = [0, 0]
         self.collisions = []

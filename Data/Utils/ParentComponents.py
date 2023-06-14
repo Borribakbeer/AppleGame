@@ -40,6 +40,9 @@ class Collider:
         self.radius = max(self.size)
         self.collisionrect = None
         self.add_tag("Collider")
+        
+        if(collisionType == "Mask"):
+            self.mask = pg.mask.from_surface(self.image)
 
         
     def Collide(self, collider):
@@ -48,7 +51,13 @@ class Collider:
         elif(self.collisionType == "Box"):
             return self.collisionrect.colliderect(collider.rect)
         elif(self.collisionType == "Mask"):
-            if(pg.Vector2.distance_to(self.worldposition, collider.worldposition) > self.radius + collider.radius):
+            if(pg.Vector2.distance_to(self.nextWorldPosition, collider.worldposition) < self.radius + collider.radius):
+                offset = pg.Vector2()
+                return self.mask.overlap(collider.mask, offset)
+            else:
+                return False
+        elif(self.collisionType == "Radius"):
+            if(pg.Vector2.distance_to(self.nextWorldPosition, collider.worldposition) < self.radius + collider.radius):
                 return True
             else:
                 return False
@@ -61,31 +70,29 @@ class Rigidbody(object):
         self.acceleration = pg.math.Vector2()
         self.velocity = pg.math.Vector2()
         self.worldposition = pos
+        self.nextWorldPosition = pos
 
     def add_force(self, force):
         self.velocity += force
         
 
     def update(self, GameInfo, dt):        
-        nextWorldPosition = pg.Vector2(self.worldposition.x, self.worldposition.y)
+        self.nextWorldPosition = pg.Vector2(self.worldposition.x, self.worldposition.y)
         self.velocity = [self.velocity[x] + self.acceleration[x] for x in range(len(self.acceleration))]
-        nextWorldPosition += pg.math.Vector2(self.velocity) * (dt / 1000)
+        self.nextWorldPosition += pg.math.Vector2(self.velocity) * (dt / 1000)
         
         self.collisionrect = pg.Rect(self.rect)
-        setattr(self.collisionrect, "center", GameInfo.camera.world_to_screen_space(nextWorldPosition))
+        setattr(self.collisionrect, "center", GameInfo.camera.world_to_screen_space(self.nextWorldPosition))
         
         if(GameInfo.colliders != None):
             for collider in GameInfo.colliders:
                 if(collider == self): 
                     continue
                 if Collider.Collide(self, collider):
-                    print("Colliding")
                     return
-                else:
-                    pass
         #THE FOLLOWING CODE IS ONLY EXECUTED WHEN THERE HAS NOT BEEN ANY COLLISION
         
-        self.worldposition = nextWorldPosition
+        self.worldposition = self.nextWorldPosition
         
 
 
