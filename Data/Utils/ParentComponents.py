@@ -37,13 +37,21 @@ class BaseSprite(pg.sprite.Sprite):
 class Collider:
     def __init__(self, collisionType):
         self.collisionType = collisionType
+        self.radius = max(self.size)
         self.collisionrect = None
+        self.add_tag("Collider")
+
         
-    def CollideRect(self, rect):
+    def Collide(self, collider):
         if(self.collisionType == "None"):
             return False
         elif(self.collisionType == "Box"):
-            return self.collisionrect.colliderect(rect)
+            return self.collisionrect.colliderect(collider.rect)
+        elif(self.collisionType == "Mask"):
+            if(pg.Vector2.distance_to(self.worldposition, collider.worldposition) > self.radius + collider.radius):
+                return True
+            else:
+                return False
         else:
             print("Collisiontype: '" + self.collisionType + "' is not implemented yet")
             return False
@@ -58,19 +66,23 @@ class Rigidbody(object):
         self.velocity += force
         
 
-    def update(self, dt):
+    def update(self, GameInfo, dt):        
         nextWorldPosition = pg.Vector2(self.worldposition.x, self.worldposition.y)
         self.velocity = [self.velocity[x] + self.acceleration[x] for x in range(len(self.acceleration))]
         nextWorldPosition += pg.math.Vector2(self.velocity) * (dt / 1000)
         
         self.collisionrect = pg.Rect(self.rect)
-        setattr(self.collisionrect, "center", nextWorldPosition)
+        setattr(self.collisionrect, "center", GameInfo.camera.world_to_screen_space(nextWorldPosition))
         
-        if(self.colliders != None):
-            for collider in self.colliders:
-                if(isinstance(collider, type(Collider))):
-                    if Collider.CollideRect(self, collider.rect):
-                        return
+        if(GameInfo.colliders != None):
+            for collider in GameInfo.colliders:
+                if(collider == self): 
+                    continue
+                if Collider.Collide(self, collider):
+                    print("Colliding")
+                    return
+                else:
+                    pass
         #THE FOLLOWING CODE IS ONLY EXECUTED WHEN THERE HAS NOT BEEN ANY COLLISION
         
         self.worldposition = nextWorldPosition
@@ -78,13 +90,13 @@ class Rigidbody(object):
 
 
 class GameObject(BaseSprite):
-    def __init__(self, folder, name, pos, size, collider = "None", colliders = [], *groups):
+    def __init__(self, folder, name, pos, size, *groups):
         self.size = size
         self.worldposition = pos
 
         self.image = resources.GFX[folder][name]   
         
-        self.colliders = colliders     
+        self.colliders = None     
 
         BaseSprite.__init__(self, pos, size, *groups)
 
@@ -93,7 +105,7 @@ class GameObject(BaseSprite):
         # Possible tags are: "ALWAYS_RENDER", "DRAWABLE"
         self.tags = {"DRAWABLE"}
 
-    def update(self, now, keys, dt):
+    def update(self, now, keys, GameInfo, dt):
         pass
 
     def draw(self, surface):

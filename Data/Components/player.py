@@ -11,16 +11,16 @@ import numpy as np
 class Player(pc.GameObject, pc.Rigidbody):
     def __init__(self, pos):
         pc.Rigidbody.__init__(self, pos)
-        pc.GameObject.__init__(self, "Misc", "Heart", pos, (1, 1), "Box")
+        pc.GameObject.__init__(self, "Misc", "Heart", pos, (1, 1))
         pc.Collider.__init__(self, "Box")
         self.worldposition = pos
         self.screenposition = [0, 0]
         self.collisions = []
         self.tags.add("Player")
 
-    def update(self, now, keys, dt):
-        pc.GameObject.update(self, now, keys, dt)
-        pc.Rigidbody.update(self, dt)
+    def update(self, now, keys, GameInfo, dt):
+        pc.GameObject.update(self, now, keys, GameInfo, dt)
+        pc.Rigidbody.update(self, GameInfo, dt)
 
     def draw(self, surface):
         pc.GameObject.draw(self, surface)

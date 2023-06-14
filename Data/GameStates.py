@@ -126,7 +126,7 @@ class Game(state_machine.State):
 
     def update(self, keys, now, dt):
         self.now = now
-        self.elements.update(now, keys, self.colliders, dt)
+        self.elements.update(now, keys, self, dt)
 
     def draw(self, surface, interpolate):
         self.camera.draw_frame(surface, self.elements)

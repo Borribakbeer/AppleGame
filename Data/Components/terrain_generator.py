@@ -17,7 +17,7 @@ class TerrainGenerator():
         self.chunks = Tools.GameObjectsCollection()
         
 
-    def update(self, now, keys, dt):
+    def update(self, now, keys, GameInfo, dt):
         chunksToCheck = []
         chunksToCheck += self.chunks.get_objects()
         rounded_camera_position = pg.math.Vector2(self.camera.position.x, self.camera.position.y)
