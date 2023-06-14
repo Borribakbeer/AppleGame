@@ -5,7 +5,6 @@ from Utils import Tools
 from Stats import PlayerStats
 import ResourceManager as resources
 import pygame as pg
-import numpy as np
 
 
 class Player(pc.GameObject, pc.Rigidbody):
@@ -27,13 +26,17 @@ class Player(pc.GameObject, pc.Rigidbody):
 
     def get_key(self, receivedKeys):
         self.keys = receivedKeys
+        self.velocity = pg.Vector2(0, 0)
+
         if self.keys[pg.K_w]:
-            self.velocity = np.array(resources.DIRECT_DICT["front"]) * PlayerStats.SPEED
-        elif self.keys[pg.K_s]:
-            self.velocity = np.array(resources.DIRECT_DICT["back"]) * PlayerStats.SPEED
-        elif self.keys[pg.K_d]:
-            self.velocity = np.array(resources.DIRECT_DICT["right"]) * PlayerStats.SPEED
-        elif self.keys[pg.K_a]:
-            self.velocity = np.array(resources.DIRECT_DICT["left"]) * PlayerStats.SPEED
-        else:
-            self.velocity = np.array((0, 0))
+            self.velocity.y = 1
+        if self.keys[pg.K_s]:
+            self.velocity.y = -1
+        if self.keys[pg.K_d]:
+            self.velocity.x = 1
+        if self.keys[pg.K_a]:
+            self.velocity.x = -1
+
+        if not (self.velocity == pg.Vector2(0,0)):
+            self.velocity = pg.Vector2.normalize(self.velocity) * PlayerStats.SPEED
+

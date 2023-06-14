@@ -34,10 +34,10 @@ pg.display.update()
 # General constants
 DIRECTIONS = ["front", "back", "left", "right"]
 
-DIRECT_DICT = {"front": (0, 1),
-               "back": (0, -1),
-               "left": (-1, 0),
-               "right": (1, 0)}
+DIRECT_DICT = {"front": pg.Vector2(0, 1),
+               "back": pg.Vector2(0, -1),
+               "left": pg.Vector2(-1, 0),
+               "right": pg.Vector2(1, 0)}
 
 # Draw layer order for all types of items.
 Z_ORDER = {"Background": -100,

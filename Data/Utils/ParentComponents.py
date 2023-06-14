@@ -2,7 +2,6 @@
 import pygame as pg
 import Utils.Tools as tools
 import ResourceManager as resources
-import numpy as np
 
 
 class BaseSprite(pg.sprite.Sprite):
@@ -68,7 +67,7 @@ class Collider:
 
 class Rigidbody(object):
     def __init__(self, pos):
-        self.acceleration = pg.math.Vector2()
+        self.acceleration = pg.math.Vector2(0, 0)
         self.velocity = pg.math.Vector2()
         self.worldposition = pos
         self.nextWorldPosition = pos
@@ -78,7 +77,7 @@ class Rigidbody(object):
         
     def update(self, GameInfo, dt):        
         self.nextWorldPosition = pg.Vector2(self.worldposition.x, self.worldposition.y)
-        self.velocity = [self.velocity[x] + self.acceleration[x] for x in range(len(self.acceleration))]
+        self.velocity += self.acceleration
         self.nextWorldPosition += pg.math.Vector2(self.velocity) * (dt / 1000)
         
         self.collisionrect = pg.Rect(self.rect)
