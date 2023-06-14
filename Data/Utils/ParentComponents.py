@@ -38,7 +38,7 @@ class Collider:
     def __init__(self, collisionType):
         self.collisionType = collisionType
         self.radius = max(self.size)
-        self.collisionrect = None
+        self.collisionrect = self.rect
         self.add_tag("Collider")
         
         if(collisionType == "Mask"):
@@ -49,10 +49,10 @@ class Collider:
         if(self.collisionType == "None"):
             return False
         elif(self.collisionType == "Box"):
-            return self.collisionrect.colliderect(collider.rect)
+            return self.collisionrect.colliderect(collider.collisionrect)
         elif(self.collisionType == "Mask"):
             if(pg.Vector2.distance_to(self.nextWorldPosition, collider.worldposition) < self.radius + collider.radius):
-                offset = pg.Vector2()
+                offset = pg.Vector2(collider.collisionrect.center) - pg.Vector2(self.collisionrect.center)
                 return self.mask.overlap(collider.mask, offset)
             else:
                 return False
@@ -75,7 +75,6 @@ class Rigidbody(object):
     def add_force(self, force):
         self.velocity += force
         
-
     def update(self, GameInfo, dt):        
         self.nextWorldPosition = pg.Vector2(self.worldposition.x, self.worldposition.y)
         self.velocity = [self.velocity[x] + self.acceleration[x] for x in range(len(self.acceleration))]
