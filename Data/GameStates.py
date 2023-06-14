@@ -75,6 +75,11 @@ class GameController(object):
                 lag -= TIME_PER_UPDATE
             self.draw(lag / TIME_PER_UPDATE)
 
+    def setup_events(self):
+        RESET_GAME = pg.USEREVENT + 1
+        game_event = pg.event.Event(RESET_GAME)
+
+
 
 class MainMenu(state_machine.State):
     def __init__(self):
@@ -194,7 +199,8 @@ class Winscreen(state_machine.State):
 
     def make_elements(self):
         group = pg.sprite.LayeredUpdates()
-        group.add(MainMenuBuilder.AnyKey(), MainMenuBuilder.TitleImage(), layer=1)
+        group.add(WinscreenBuilder.RestartButton(), layer=1)
+        group.add(WinscreenBuilder.WinText(), layer=2)
         return group
 
     def update(self, keys, now, dt):
@@ -207,10 +213,6 @@ class Winscreen(state_machine.State):
         self.elements.draw(surface)
 
     def get_event(self, event):
-        """
-        Get events from Control.  Currently changes to next state on any key
-        press.
-        """
-        if event.type == pg.KEYDOWN:
-            self.next = "Game"
-            self.done = True
+        for sprite in self.elements.get_sprites_from_layer(1):
+            sprite.get_event(event)
+        pass
