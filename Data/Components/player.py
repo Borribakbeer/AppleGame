@@ -28,13 +28,13 @@ class Player(pc.GameObject, pc.Rigidbody):
         self.keys = receivedKeys
         self.velocity = pg.Vector2(0, 0)
 
-        if self.keys[pg.K_w]:
+        if self.keys[pg.K_w] or self.keys[pg.K_UP]:
             self.velocity.y = 1
-        if self.keys[pg.K_s]:
+        if self.keys[pg.K_s] or self.keys[pg.K_DOWN]:
             self.velocity.y = -1
-        if self.keys[pg.K_d]:
+        if self.keys[pg.K_d] or self.keys[pg.K_RIGHT]:
             self.velocity.x = 1
-        if self.keys[pg.K_a]:
+        if self.keys[pg.K_a] or self.keys[pg.K_LEFT]:
             self.velocity.x = -1
 
         if not (self.velocity == pg.Vector2(0,0)):

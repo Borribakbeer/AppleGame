@@ -18,7 +18,7 @@ class RestartButton(pg.sprite.Sprite):
         pass
 
     def Activate(self):
-        print("BUTTOPN PRESSEd")    
+        pg.event.post(pg.event.Event(resources.RESET_GAME))
         pass 
 
     def get_event(self, event):
@@ -30,7 +30,7 @@ class RestartButton(pg.sprite.Sprite):
             pos = pg.mouse.get_pos()
 
             if self.rect.collidepoint(pos):
-                self.image.fill((0, 0, 0))
+                self.image.fill((200, 255, 150))
                 self.Activate()
         pass
 

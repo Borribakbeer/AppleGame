@@ -43,9 +43,14 @@ class GameController(object):
                 self.done = True
             elif event.type == pg.KEYDOWN:
                 self.keys = pg.key.get_pressed()
+                if self.keys[pg.K_BACKSPACE]:
+                    print("BUBYE")
+                    pg.event.post(pg.event.Event(RESET_GAME))
                 self.toggle_show_fps(event.key)
             elif event.type == pg.KEYUP:
                 self.keys = pg.key.get_pressed()
+            elif event.type == RESET_GAME:
+                self.state_machine.state_dict["Game"] = Game()
             self.state_machine.get_event(event)
 
     def toggle_show_fps(self, key):
@@ -74,10 +79,7 @@ class GameController(object):
                 self.update(dt)
                 lag -= TIME_PER_UPDATE
             self.draw(lag / TIME_PER_UPDATE)
-
-    def setup_events(self):
-        RESET_GAME = pg.USEREVENT + 1
-        game_event = pg.event.Event(RESET_GAME)
+        
 
 
 
@@ -215,4 +217,8 @@ class Winscreen(state_machine.State):
     def get_event(self, event):
         for sprite in self.elements.get_sprites_from_layer(1):
             sprite.get_event(event)
+
+        if event.type == RESET_GAME:
+            self.next = "Game"
+            self.done = True
         pass

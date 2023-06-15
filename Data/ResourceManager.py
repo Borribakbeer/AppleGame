@@ -94,3 +94,6 @@ def load_chunk_from_position(position, layerName):
         return [0] * 100
 
     pass
+
+#Custom Event Creation
+RESET_GAME = pg.USEREVENT + 1
