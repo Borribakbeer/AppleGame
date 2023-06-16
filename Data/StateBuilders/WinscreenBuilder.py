@@ -33,6 +33,11 @@ class RestartButton(pg.sprite.Sprite):
                 self.image.fill((200, 255, 150))
                 self.image.blit(self.text, (0,0))
                 self.Activate()
+
+        if event.type == pg.KEYDOWN:
+            keys = pg.key.get_pressed()
+            if keys[pg.K_r]:
+                self.Activate()
         pass
 
 class WinText(pg.sprite.Sprite):

@@ -9,8 +9,8 @@ class BaseSprite(pg.sprite.Sprite):
     def __init__(self, pos, size, *groups, setRect = False, rect = pg.Rect((0, 0), (0,0))):
         pg.sprite.Sprite.__init__(self, *groups)
 
-        size = pg.math.Vector2(size) * resources.UNIT_SCALE
-        self.image = pg.transform.scale(self.image, size)
+        scalar = pg.math.Vector2(size) * resources.UNIT_SCALE
+        self.image = pg.transform.scale(self.image, scalar)
 
         if setRect:
             self.rect = rect
@@ -25,6 +25,9 @@ class BaseSprite(pg.sprite.Sprite):
     def reset_position(self, value, attribute="center"):
         #Relocate the sprite
         setattr(self.rect, attribute, value)
+        scalar = pg.math.Vector2(self.size) * resources.UNIT_SCALE
+        self.image = pg.transform.scale(self.image, pg.Vector2(abs(scalar.x), abs(scalar.y)))
+
         self.exact_position = list(self.rect.center)
         self.old_position = self.exact_position[:]
 
@@ -42,36 +45,38 @@ class Collider:
         
         if(collisionType == "Mask"):
             self.mask = pg.mask.from_surface(self.image)
-        
+
+    def collision_is_true(self, collider):
+        if hasattr(collider, 'collided_with') and callable(collider.collided_with):
+            collider.collided_with(self)
+        return True  
+     
     def Collide(self, collider):
         if(self.collisionType == "None"):
             return False
         elif(collider.collisionType == "Box"):
             if(self.collisionrect.colliderect(collider.collisionrect)):
-                collider.collided_with(self)
-                return True
+                return Collider.collision_is_true(self,collider)
             else:
                 False
         elif(collider.collisionType == "Mask"):
             if(pg.Vector2.distance_to(self.nextWorldPosition, collider.worldposition) < self.radius + collider.radius):
                 offset = pg.Vector2(collider.collisionrect.topleft) - pg.Vector2(self.collisionrect.topleft)
                 if(self.mask.overlap_area(collider.mask, offset) > 0):
-                    if hasattr(collider, 'collided_with') and callable(collider.collided_with):
-                        collider.collided_with(self)
-                    return True
+                    return Collider.collision_is_true(self,collider)
                 else:
                     return False 
             else:
                 return False
         elif(collider.collisionType == "Radius"):
             if(pg.Vector2.distance_to(self.nextWorldPosition, collider.worldposition) < self.radius + collider.radius):
-                collider.collided_with(self)
-                return True
+                return Collider.collision_is_true(self,collider)
             else:
                 return False
         else:
             print("Collisiontype: '" + self.collisionType + "' is not implemented yet")
             return False
+        
 
 class Rigidbody(object):
     def __init__(self, pos):

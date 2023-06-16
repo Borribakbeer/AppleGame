@@ -12,7 +12,6 @@ class Camera(object):
         self.velocity = pg.math.Vector2()
         self.objects = CameraRenderGroup()
         self.ground = CameraRenderGroup(False)
-        self.mouseZoom = 0
 
     def draw_frame(self, surface, objectsCollection):
         if self.player:
@@ -56,8 +55,9 @@ class Camera(object):
                 self.objects.add(obj)
 
     def get_event(self, event):
-        if event == pg.MOUSEWHEEL:
-            self.mouseZoom = event.y
+        if event.type == pg.MOUSEWHEEL:
+            print(event.y)
+            rc.set_camera_zoom(rc.CAMERA_ZOOM + event.y * 0.5)
 
 
 
@@ -66,7 +66,7 @@ class Camera(object):
         # 0                     
         # -scaleY / -scaleX     0   scaleX
         
-        size = rc.CAMERA_ZOOM;
+        size = rc.CAMERA_ZOOM
         
         scaleY = size
         scaleX = (size / rc.SCREEN_SIZE[1]) * rc.SCREEN_SIZE[0]

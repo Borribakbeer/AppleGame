@@ -47,7 +47,6 @@ class GameController(object):
             elif event.type == pg.KEYUP:
                 self.keys = pg.key.get_pressed()
             elif event.type == RESET_GAME:
-                print("Received")
                 self.state_machine.state_dict["Game"] = Game()
             self.state_machine.get_event(event)
 
