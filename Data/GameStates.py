@@ -43,13 +43,11 @@ class GameController(object):
                 self.done = True
             elif event.type == pg.KEYDOWN:
                 self.keys = pg.key.get_pressed()
-                if self.keys[pg.K_BACKSPACE]:
-                    print("BUBYE")
-                    pg.event.post(pg.event.Event(RESET_GAME))
                 self.toggle_show_fps(event.key)
             elif event.type == pg.KEYUP:
                 self.keys = pg.key.get_pressed()
             elif event.type == RESET_GAME:
+                print("Received")
                 self.state_machine.state_dict["Game"] = Game()
             self.state_machine.get_event(event)
 
@@ -147,14 +145,15 @@ class Game(state_machine.State):
             if(self.keys[pg.K_ESCAPE]):
                 self.next = "Paused"
                 self.done = True
-            elif(self.keys[pg.K_F10]):
-                self.next = "Winscreen"
-                self.done = True
 
         elif event.type == pg.KEYUP:
             self.keys = pg.key.get_pressed()
             self.elements.get_keys(self.keys)
         self.camera.get_event(event)
+        
+        if(event.type == RESET_GAME):
+            self.next = "Winscreen"
+            self.done = True
 
 
 class Paused(state_machine.State):

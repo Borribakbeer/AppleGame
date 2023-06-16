@@ -60,7 +60,7 @@ def graphics_from_directories(directories):
     return GFX
 
 
-_SUB_DIRECTORIES = ["Misc", "Debug", "Tilemaps", "UI"]
+_SUB_DIRECTORIES = ["Misc", "Debug", "Tilemaps", "UI", "Sprites"]
 GFX = graphics_from_directories(_SUB_DIRECTORIES)
 
 import Utils.WorldData as WorldData
@@ -76,6 +76,7 @@ def load_chunk_from_position(position, layerName):
         if layer.layerName == layerName:
             chunkLayer = layer
             failedSearch = False
+            break
     
     if failedSearch:
         print("Error: Failed to locate layer " + layerName + " in World.json")

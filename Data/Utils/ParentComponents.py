@@ -42,22 +42,30 @@ class Collider:
         
         if(collisionType == "Mask"):
             self.mask = pg.mask.from_surface(self.image)
-
         
     def Collide(self, collider):
         if(self.collisionType == "None"):
             return False
-        elif(self.collisionType == "Box"):
-            return self.collisionrect.colliderect(collider.collisionrect)
-        elif(self.collisionType == "Mask"):
+        elif(collider.collisionType == "Box"):
+            if(self.collisionrect.colliderect(collider.collisionrect)):
+                collider.collided_with(self)
+                return True
+            else:
+                False
+        elif(collider.collisionType == "Mask"):
             if(pg.Vector2.distance_to(self.nextWorldPosition, collider.worldposition) < self.radius + collider.radius):
                 offset = pg.Vector2(collider.collisionrect.topleft) - pg.Vector2(self.collisionrect.topleft)
-                print(str(self.mask.overlap_area(collider.mask, offset)))
-                return self.mask.overlap_area(collider.mask, offset) > 0
+                if(self.mask.overlap_area(collider.mask, offset) > 0):
+                    if hasattr(collider, 'collided_with') and callable(collider.collided_with):
+                        collider.collided_with(self)
+                    return True
+                else:
+                    return False 
             else:
                 return False
-        elif(self.collisionType == "Radius"):
+        elif(collider.collisionType == "Radius"):
             if(pg.Vector2.distance_to(self.nextWorldPosition, collider.worldposition) < self.radius + collider.radius):
+                collider.collided_with(self)
                 return True
             else:
                 return False
@@ -78,7 +86,7 @@ class Rigidbody(object):
     def update(self, GameInfo, dt):        
         self.nextWorldPosition = pg.Vector2(self.worldposition.x, self.worldposition.y)
         self.velocity += self.acceleration
-        self.nextWorldPosition += pg.math.Vector2(self.velocity) * (dt / 1000)
+        self.nextWorldPosition += pg.math.Vector2(self.velocity) * (1/dt)
         
         self.collisionrect = pg.Rect(self.rect)
         setattr(self.collisionrect, "center", GameInfo.camera.world_to_screen_space(self.nextWorldPosition))

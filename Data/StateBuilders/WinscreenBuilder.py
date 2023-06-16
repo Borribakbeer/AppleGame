@@ -31,6 +31,7 @@ class RestartButton(pg.sprite.Sprite):
 
             if self.rect.collidepoint(pos):
                 self.image.fill((200, 255, 150))
+                self.image.blit(self.text, (0,0))
                 self.Activate()
         pass
 
