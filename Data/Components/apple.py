@@ -6,6 +6,7 @@ import math
 class Apple(pc.GameObject):
     def __init__(self, pos, size = pg.Vector2(1, 1), *groups):
         pc.GameObject.__init__(self, "Sprites", "Apple", pos, size)
+
         pc.Collider.__init__(self, "Radius")
         self.radius = 0.2
 

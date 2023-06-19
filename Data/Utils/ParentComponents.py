@@ -152,3 +152,48 @@ class GameObject(BaseSprite):
     
     def add_tag(self, tag):
         self.tags.add(tag)
+
+class Animation(GameObject):
+    def __init__(self, folder, name, pos, spritesize, frameratems, *groups):
+        GameObject.__init__(self, folder, name, pos, pg.Vector2(spritesize) / resources.UNIT_SCALE, *groups)
+
+        self.frames = self.GetFrames(spritesize, folder, name)
+
+        self.image = self.frames[0]
+        self.rect = self.image.get_rect()
+        
+        self.frameIndex = 0
+        self.frameratems = frameratems
+        self.timer = frameratems
+
+    def GetFrames(self, spritesize, folder, name):
+        w, h = resources.GFX[folder][name].get_size()
+        frames = []
+
+        for x in range(0, w, spritesize[0]):
+                for y in range(0, h, spritesize[1]):
+                    frame = pg.Surface(spritesize, pg.SRCALPHA, 32)
+                    frame = frame.convert_alpha()
+                    frame.blit(self.image, (0, 0), (x, y, *spritesize))
+                    frames.append(frame)
+        
+        return frames
+                
+    def update(self, now, keys, GameInfo, dt):
+        GameObject.update(self, now, keys, GameInfo, dt)
+
+        if now > self.timer:
+            self.timer = now + self.frameratems
+            
+            if self.frameIndex < len(self.frames):
+                self.image.blit(self.frames[self.frameIndex], (0, 0))
+                print(self.frameIndex)
+                self.frameIndex = self.frameIndex + 1
+            else:
+                self.image = self.frames[0]
+                print("Frame 0 at " + str(now))
+                self.image.blit(self.frames[0], (0, 0))
+                self.frameIndex = 1
+
+
+
