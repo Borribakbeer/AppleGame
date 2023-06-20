@@ -28,8 +28,8 @@ def set_camera_zoom(zoom):
 PIXELSCALE_IMAGES = 16
 ORIGINAL_CAPTION = "The Apple Game"
 SCREEN_RECT = pg.Rect((0, 0), SCREEN_SIZE)
-_FONT_PATH = os.path.join("Resources", "Fonts", "Fixedsys500c.ttf")
-BIG_FONT = pg.font.Font(_FONT_PATH, 100)
+FONT_PATH = os.path.join("Resources", "Fonts", "Fixedsys500c.ttf")
+BIG_FONT = pg.font.Font(FONT_PATH, 100)
 
 # Initialization
 pg.display.set_caption(ORIGINAL_CAPTION)

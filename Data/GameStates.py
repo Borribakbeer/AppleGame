@@ -4,7 +4,7 @@ from Utils import state_machine, Tools, ParentComponents
 from StateBuilders import MainMenuBuilder, GameBuilder, PausedBuilder, WinscreenBuilder
 from Stats import AppleStats
 from ResourceManager import *
-from Components import camera
+from Components import camera, UIDrawer
 
 TIME_PER_UPDATE = 16.0  # Milliseconds
 
@@ -49,7 +49,7 @@ class GameController(object):
             elif event.type == pg.KEYUP:
                 self.keys = pg.key.get_pressed()
             elif event.type == RESET_GAME:
-                self.state_machine.state_dict["Game"] = Game()
+                self.state_machine.state_dict["Game"] = Game(self.now)
             self.state_machine.get_event(event)
 
     def toggle_show_fps(self, key):
@@ -115,9 +115,10 @@ class MainMenu(state_machine.State):
 
 
 class Game(state_machine.State):
-    def __init__(self):
+    def __init__(self, now):
         state_machine.State.__init__(self)
         self.camera = camera.Camera()
+        self.uibuilder = UIDrawer.UIDrawer()
         self.elements = GameBuilder.make_elements(self.camera)
         self.colliders = []
         for collider in self.elements.get_objects():
@@ -128,6 +129,8 @@ class Game(state_machine.State):
 
         self.maxapples = len(AppleStats.apples)
         self.applecount = self.maxapples
+        self.runstarttime = now
+
 
 
     def startup(self, now, persistant):
@@ -140,6 +143,7 @@ class Game(state_machine.State):
 
     def draw(self, surface, interpolate):
         self.camera.draw_frame(surface, self.elements)
+        self.uibuilder.draw(surface, self)
 
     def get_event(self, event):
         self.elements.get_event(event)

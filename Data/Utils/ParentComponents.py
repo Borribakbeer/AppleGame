@@ -100,16 +100,20 @@ class Rigidbody(object):
             self.check_collisions(GameInfo.colliders)
             
 
-    def check_collisions(self, colliders):
+    def check_collisions(self, colliders, inTheRabbithole = False):
         for collider in colliders:
                 if("COLLECTION" in collider.tags):
-                    if self.check_collisions(collider.get_objects()):
-                        return
+                    if self.check_collisions(collider.get_objects(), True):
+                        return True
                     continue
                 if(collider == self): 
                     continue
                 if Collider.Collide(self, collider):
                     return True
+        
+        #If it is checking collision in a collection (down a rabbit hole) and not in the original space then we can't already update the position
+        if inTheRabbithole:
+            return False
         #THE FOLLOWING CODE IS ONLY EXECUTED WHEN THERE HAS NOT BEEN ANY COLLISION
         
         self.worldposition = self.nextWorldPosition

@@ -28,9 +28,10 @@ class TileChunk(pc.BaseSprite):
         self.old_position = self.exact_position[:]
 
         self.set_map(pos, tilemapLayer)
-
+        
         if(hasCollision):
             pc.Collider.__init__(self, "Mask")
+        
         
 
     def update(self, now, keys, dt):
