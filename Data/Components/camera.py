@@ -33,7 +33,7 @@ class Camera(object):
         self.objects.custom_draw(surface)
 
     def set_objects_world_to_screen_space(self, objects):
-        for obj in objects:
+        for obj in objects:                
             obj.screenposition = self.world_to_screen_space(obj.worldposition)
 
     def check_within_range(self, objects):
