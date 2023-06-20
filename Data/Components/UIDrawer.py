@@ -12,8 +12,6 @@ class UIDrawer():
         applecounter = font.render(str(GameInfo.maxapples - GameInfo.applecount) + "/" + str(GameInfo.maxapples), False, pg.Color("white"))
         surface.blit(applecounter, (15, 15))
 
-
-
         #Draw how much time it took
         td = timedelta(milliseconds=(GameInfo.now - GameInfo.runstarttime))
 

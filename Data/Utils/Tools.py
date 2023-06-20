@@ -70,6 +70,16 @@ def load_all_gfx(path, tint=(255, 0, 255), accept=(".png", ".jpg")):
             graphics[name] = img
     return graphics
 
+def load_all_sounds(path, accept=(".mp3", ".wav", ".ogg")):
+    sounds = {}
+    for pic in os.listdir(path):
+        name, ext = os.path.splitext(pic)
+        if ext.lower() in accept:
+            sound = pg.mixer.Sound(os.path.join(path, pic))
+
+            sounds[name] = sound
+    return sounds
+
 
 def load_all_fonts(directory, accept=(".ttf",)):
     """

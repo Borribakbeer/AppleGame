@@ -1,10 +1,11 @@
 import pygame as pg
+import random
 import Utils.ParentComponents
 from Utils import state_machine, Tools, ParentComponents
 from StateBuilders import MainMenuBuilder, GameBuilder, PausedBuilder, WinscreenBuilder
 from Stats import AppleStats
 from ResourceManager import *
-from Components import camera, UIDrawer
+from Components import camera, UIDrawer, SoundPlayer
 
 TIME_PER_UPDATE = 16.0  # Milliseconds
 
@@ -23,6 +24,13 @@ class GameController(object):
         self.now = 0.0
         self.keys = pg.key.get_pressed()
         self.state_machine = state_machine.StateMachine()
+
+        self.musicqueue = MUSIC_PATHS
+        randomIndex = random.randint(0, len(self.musicqueue) - 1)
+        pg.mixer.music.load(open(os.path.join("Resources", "Sounds", "Music", self.musicqueue[randomIndex]) +".ogg"),)
+        pg.mixer.music.play()
+        del self.musicqueue[randomIndex]
+        pg.mixer.music.set_endevent(ENDING_MUSIC)
 
     def update(self, dt):
         # Updates the currently active state.
@@ -51,6 +59,25 @@ class GameController(object):
             elif event.type == RESET_GAME:
                 self.state_machine.state_dict["Game"] = Game(self.now)
             self.state_machine.get_event(event)
+
+            if event.type == ENDING_MUSIC:
+                self.QueueMusic()
+
+
+    def QueueMusic(self):
+        if len(self.musicqueue) <= 0:
+            self.musicqueue = MUSIC_PATHS
+
+        randomIndex = random.randint(0, len(self.musicqueue) - 1)
+        pg.mixer.music.load(os.path.join("Resources", "Sounds", "Music", self.musicqueue[randomIndex]))
+        pg.mixer.music.play()
+        del self.musicqueue[randomIndex]
+
+        #pg.mixer.music()
+
+        
+
+
 
     def toggle_show_fps(self, key):
         # Press f5 to turn on/off displaying the framerate in the caption.
@@ -119,6 +146,7 @@ class Game(state_machine.State):
         state_machine.State.__init__(self)
         self.camera = camera.Camera()
         self.uibuilder = UIDrawer.UIDrawer()
+        self.soundplayer = SoundPlayer.SoundPlayer()
         self.elements = GameBuilder.make_elements(self.camera)
         self.colliders = []
         for collider in self.elements.get_objects():

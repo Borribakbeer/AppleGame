@@ -19,14 +19,18 @@ class Apple(pc.GameObject):
 
         self.collected = False
 
+        self.GameInfo = None
+
     def update(self, now, keys, GameInfo, dt):
         pc.GameObject.update(self, now, keys, GameInfo, dt)
-
+        if not self.GameInfo:
+            self.GameInfo = GameInfo
         self.worldposition.y = self.origin.y + (math.sin(now / 300) * 0.1)
         
     def collided_with(self, collision):
         if("Player" in collision.tags):
             self.collected = True
+            self.GameInfo.soundplayer.PlaySound("Pickup")
             pass
 
     def Destroy(self):

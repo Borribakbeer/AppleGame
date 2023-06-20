@@ -70,8 +70,25 @@ def graphics_from_directories(directories):
     return GFX
 
 
-_SUB_DIRECTORIES = ["Misc", "Debug", "Tilemaps", "UI", "Sprites"]
-GFX = graphics_from_directories(_SUB_DIRECTORIES)
+_GFX_SUB_DIRECTORIES = ["Misc", "Debug", "Tilemaps", "UI", "Sprites"]
+GFX = graphics_from_directories(_GFX_SUB_DIRECTORIES)
+
+def sounds_from_directories(directories):
+    """
+    Calls the tools.load_all_sounds() function for all directories passed.
+    """
+    base_path = os.path.join("Resources", "Sounds")
+    SFX = {}
+    for directory in directories:
+        path = os.path.join(base_path, directory)
+        SFX[directory] = Tools.load_all_sounds(path)
+    return SFX
+
+_SOUND_SUB_DIRECTORIES = ["SFX"]
+SFX = sounds_from_directories(_SOUND_SUB_DIRECTORIES)
+
+MUSIC_PATHS = ["GerudoValley", "MasterKohga"]
+
 
 import Utils.WorldData as WorldData
 
@@ -108,3 +125,4 @@ def load_chunk_from_position(position, layerName):
 
 #Custom Event Creation
 RESET_GAME = pg.USEREVENT + 1
+ENDING_MUSIC = pg.USEREVENT + 2
