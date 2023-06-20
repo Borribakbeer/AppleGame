@@ -1,1 +1,1 @@
-SPEED = 3
+SPEED = 5

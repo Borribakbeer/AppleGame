@@ -15,6 +15,10 @@ class Apple(pc.GameObject):
         self.screenposition = [0, 0]
         self.collisions = []
 
+        self.destroyed = False
+
+        self.collected = False
+
     def update(self, now, keys, GameInfo, dt):
         pc.GameObject.update(self, now, keys, GameInfo, dt)
 
@@ -22,7 +26,14 @@ class Apple(pc.GameObject):
         
     def collided_with(self, collision):
         if("Player" in collision.tags):
-            pg.event.post(pg.event.Event(RESET_GAME))
+            self.collected = True
             pass
 
+    def Destroy(self):
+        self.destroyed = True
+
+    def draw(self, surface):
+        if self.destroyed:
+            return self
+        pc.GameObject.draw(self, surface)
         

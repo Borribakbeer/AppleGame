@@ -2,6 +2,7 @@ import pygame as pg
 import Utils.ParentComponents
 from Utils import state_machine, Tools, ParentComponents
 from StateBuilders import MainMenuBuilder, GameBuilder, PausedBuilder, WinscreenBuilder
+from Stats import AppleStats
 from ResourceManager import *
 from Components import camera
 
@@ -41,6 +42,7 @@ class GameController(object):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.done = True
+
             elif event.type == pg.KEYDOWN:
                 self.keys = pg.key.get_pressed()
                 self.toggle_show_fps(event.key)
@@ -123,6 +125,10 @@ class Game(state_machine.State):
                 self.colliders.append(collider)
 
         self.keys = []
+
+        self.maxapples = len(AppleStats.apples)
+        self.applecount = self.maxapples
+
 
     def startup(self, now, persistant):
         self.persist = persistant

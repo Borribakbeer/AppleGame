@@ -32,9 +32,20 @@ class AppleCreator():
         self.objects.remove(objToRemove)
 
     def update(self,now, keys, GameInfo, dt):
+        count = 0
         for obj in self.objects:
-            if obj.update(now, keys, GameInfo, dt):
+            if obj.collected:
+                count += 1
+                GameInfo.applecount -= 1
+                obj.Destroy()
                 self.remove(obj)
+            if obj.update(now, keys, GameInfo, dt):
+                self.remove(obj, True)
+
+
+        if(GameInfo.applecount == 0):
+            pg.event.post(pg.event.Event(RESET_GAME))
+
 
     def draw(self, surface):
         for obj in self.objects:
