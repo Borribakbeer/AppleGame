@@ -87,7 +87,7 @@ def sounds_from_directories(directories):
 _SOUND_SUB_DIRECTORIES = ["SFX"]
 SFX = sounds_from_directories(_SOUND_SUB_DIRECTORIES)
 
-MUSIC_PATHS = ["GerudoValley", "MasterKohga"]
+MUSIC_PATHS = ["GerudoValley", "MasterKohga", "FallGuys", "Celeste", "TalusBattle"]
 
 
 import Utils.WorldData as WorldData
