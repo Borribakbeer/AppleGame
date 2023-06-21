@@ -25,7 +25,7 @@ class GameController(object):
         self.keys = pg.key.get_pressed()
         self.state_machine = state_machine.StateMachine()
 
-        self.musicqueue = MUSIC_PATHS
+        self.musicqueue = list(MUSIC_PATHS)
         randomIndex = random.randint(0, len(self.musicqueue) - 1)
         pg.mixer.music.load(open(os.path.join("Resources", "Sounds", "Music", self.musicqueue[randomIndex]) +".ogg"),)
         pg.mixer.music.play()
@@ -66,14 +66,12 @@ class GameController(object):
 
     def QueueMusic(self):
         if len(self.musicqueue) <= 0:
-            self.musicqueue = MUSIC_PATHS
+            self.musicqueue = list(MUSIC_PATHS)
 
         randomIndex = random.randint(0, len(self.musicqueue) - 1)
-        pg.mixer.music.load(os.path.join("Resources", "Sounds", "Music", self.musicqueue[randomIndex]))
+        pg.mixer.music.load(os.path.join("Resources", "Sounds", "Music", self.musicqueue[randomIndex] + ".ogg"))
         pg.mixer.music.play()
         del self.musicqueue[randomIndex]
-
-        #pg.mixer.music()
 
         
 

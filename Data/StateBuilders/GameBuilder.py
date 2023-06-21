@@ -12,7 +12,6 @@ def make_elements(camera):
     pc.Collider.__init__(grid, "Box")
     
     elements.add(applecreator.AppleCreator())
-    #elements.add(pc.Animation("Sprites", "MagicalGlow", pg.Vector2(-5, 0), (48, 48), 500))
     
     elements.add(terrain_generator.TerrainGenerator(camera, "Ground"))
     elements.add(terrain_generator.TerrainGenerator(camera, "Objects", True))
