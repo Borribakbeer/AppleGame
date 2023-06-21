@@ -20,6 +20,7 @@ class Player(pc.GameObject, pc.Rigidbody):
     def update(self, now, keys, GameInfo, dt):
         pc.GameObject.update(self, now, keys, GameInfo, dt)
         pc.Rigidbody.update(self, GameInfo, dt)
+        print(self.worldposition)
 
     def draw(self, surface):
         pc.GameObject.draw(self, surface)

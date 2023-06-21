@@ -73,10 +73,6 @@ class GameController(object):
         pg.mixer.music.play()
         del self.musicqueue[randomIndex]
 
-        
-
-
-
     def toggle_show_fps(self, key):
         # Press f5 to turn on/off displaying the framerate in the caption.
         if key == pg.K_F5:
