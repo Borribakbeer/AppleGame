@@ -6,6 +6,7 @@ from StateBuilders import MainMenuBuilder, GameBuilder, PausedBuilder, Winscreen
 from Stats import AppleStats
 from ResourceManager import *
 from Components import camera, UIDrawer, SoundPlayer
+import json
 
 TIME_PER_UPDATE = 16.0  # Milliseconds
 
@@ -19,7 +20,7 @@ class GameController(object):
         self.caption = caption
         self.done = False
         self.clock = pg.time.Clock()
-        self.fps = 60.0
+        self.fps = 30.0
         self.fps_visible = True
         self.now = 0.0
         self.keys = pg.key.get_pressed()
@@ -45,20 +46,34 @@ class GameController(object):
             self.show_fps()
 
     def event_loop(self):
-        #Process events
+        # Process events
 
         for event in pg.event.get():
+            self.state_machine.get_event(event)
+            
+            game = self.state_machine.state_dict["Game"]
             if event.type == pg.QUIT:
                 self.done = True
-
+            # Input
             elif event.type == pg.KEYDOWN:
                 self.keys = pg.key.get_pressed()
                 self.toggle_show_fps(event.key)
             elif event.type == pg.KEYUP:
                 self.keys = pg.key.get_pressed()
+            # Reset game
             elif event.type == RESET_GAME:
+                game = self.state_machine.state_dict["Game"]
+                saveRead = open("AppleGame.save", "r")
+                save = json.load(saveRead)
+                saveRead.close()
+
+                if save["Score"][0] > game.score[0]:
+                    f = open("AppleGame.save", "w")
+                    f.write('{ "Score":' + str(game.score) + '}')
+                    f.close()
                 self.state_machine.state_dict["Game"] = Game(self.now)
-            self.state_machine.get_event(event)
+                game.done = True
+                game.next = "Game"
 
             if event.type == ENDING_MUSIC:
                 self.QueueMusic()
@@ -152,6 +167,8 @@ class Game(state_machine.State):
         self.maxapples = len(AppleStats.apples)
         self.applecount = self.maxapples
         self.runstarttime = now
+        
+        self.score = [0, 0]
 
 
 
@@ -176,6 +193,9 @@ class Game(state_machine.State):
             if(self.keys[pg.K_ESCAPE]):
                 self.next = "Paused"
                 self.done = True
+                
+            if(self.keys[pg.K_r]):
+                pg.event.post(pg.event.Event(RESET_GAME))
 
         elif event.type == pg.KEYUP:
             self.keys = pg.key.get_pressed()
