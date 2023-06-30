@@ -60,7 +60,7 @@ class Collider:
             else:
                 False
         elif(collider.collisionType == "Mask"):
-            if(pg.Vector2.distance_to(self.nextWorldPosition, collider.worldposition) < self.radius + collider.radius):
+            if(pg.Vector2.distance_to(self.nextWorldPosition, collider.worldposition) < self.radius + collider.radius*1.35):
                 offset = pg.Vector2(collider.collisionrect.topleft) - pg.Vector2(self.collisionrect.topleft)
                 if(self.mask.overlap_area(collider.mask, offset) > 0):
                     return Collider.collision_is_true(self,collider)
