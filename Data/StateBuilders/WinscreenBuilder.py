@@ -5,14 +5,14 @@ import pygame as pg
 class RestartButton(pg.sprite.Sprite):
     def __init__(self, *groups):
         pg.sprite.Sprite.__init__(self, *groups)
-        self.text = render_font("Fixedsys500c", 100,
-                                 "[Restart]", (100, 0, 100))
-        center = (resources.SCREEN_RECT.centerx, 600)
-        self.rect = self.text.get_rect(center=center)
 
-        self.image = pg.Surface((self.rect.width, self.rect.height))
-        self.image.fill((200, 255, 150))
-        self.image.blit(self.text, (0,0))
+        self.unpressed = resources.GFX["UI"]["RestartButton"]
+        self.pressed = resources.GFX["UI"]["RestartButtonPressed"]
+
+        self.rect = self.unpressed.get_rect()
+
+        self.image = self.unpressed
+
 
     def update(self, now):
         pass
@@ -23,16 +23,11 @@ class RestartButton(pg.sprite.Sprite):
 
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
-            self.image.fill((100, 200, 150))
-            self.image.blit(self.text, (0,0))
+            self.image = self.pressed
 
         if event.type == pg.MOUSEBUTTONUP:
-            pos = pg.mouse.get_pos()
-
-            if self.rect.collidepoint(pos):
-                self.image.fill((200, 255, 150))
-                self.image.blit(self.text, (0,0))
-                self.Activate()
+            self.image = self.unpressed
+            self.Activate()
 
         if event.type == pg.KEYDOWN:
             keys = pg.key.get_pressed()
@@ -43,14 +38,23 @@ class RestartButton(pg.sprite.Sprite):
 class WinText(pg.sprite.Sprite):
     def __init__(self, *groups):
         pg.sprite.Sprite.__init__(self, *groups)
-        self.image = render_font("Fixedsys500c", 200,
-                                 "You Win!", (255, 255, 255))
-        center = (resources.SCREEN_RECT.centerx, 250)
-        self.rect = self.image.get_rect(center=center)
+        self.image = resources.GFX["UI"]["WinscreenBG"]
+
+        self.rect = resources.SCREEN_RECT
 
     def get_event(self, event):
         pass
 
+class HighscoreText():
+    def __init__(self, *groups):
+        pg.sprite.Sprite.__init__(self, *groups)
+        self.image = resources.GFX["UI"]["HighscoreText"]
+
+        self.rect = resources.SCREEN_RECT
+
+    def draw(self, surface):
+        surface.blit(self.image, [0, 0])
+        pass
 
 
 def render_font(font, size, msg, color=(255, 255, 255)):

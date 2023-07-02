@@ -13,7 +13,7 @@ class UIDrawer():
         surface.blit(applecounter, (15, 15))
 
         #Draw how much time it took
-        td = timedelta(milliseconds=(GameInfo.now - GameInfo.runstarttime))
+        td = timedelta(milliseconds=(GameInfo.runTime))
         GameInfo.score = [td.seconds, round(td.microseconds/1000)]
         timetext = font.render("Time: " + str(td.seconds) + ":" + f'{round(td.microseconds/1000):03}', False, pg.Color("white"))
         rect = timetext.get_rect()

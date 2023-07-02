@@ -73,15 +73,22 @@ class GameController(object):
                 self.keys = pg.key.get_pressed()
             # Reset game
             elif event.type == RESET_GAME:
-                game = self.state_machine.state_dict["Game"]
-                saveRead = open("AppleGame.save", "r")
-                save = json.load(saveRead)
-                saveRead.close()
+                #Score
+                if game.next == "Winscreen":
+                    game = self.state_machine.state_dict["Game"]
+                    saveRead = open("AppleGame.save", "r")
+                    save = json.load(saveRead)
+                    saveRead.close()
 
-                if save["Score"][0] > game.score[0]:
-                    f = open("AppleGame.save", "w")
-                    f.write('{ "Score":' + str(game.score) + '}')
-                    f.close()
+                    if save["Score"][0] > game.score[0]:
+                        f = open("AppleGame.save", "w")
+                        f.write('{ "Score":' + str(game.score) + '}')
+                        f.close()
+                    elif save["Score"][0] == game.score[0] and save["Score"][1] > game.score[1]:
+                        f = open("AppleGame.save", "w")
+                        f.write('{ "Score":' + str(game.score) + '}')
+                        f.close()
+                #Resetting The Game State
                 self.state_machine.state_dict["Game"] = Game(self.now)
                 game.done = True
 
@@ -124,8 +131,6 @@ class GameController(object):
                 self.update(dt)
                 lag -= TIME_PER_UPDATE
             self.draw(lag / TIME_PER_UPDATE)
-        
-
 
 
 class MainMenu(state_machine.State):
@@ -176,7 +181,7 @@ class Game(state_machine.State):
 
         self.maxapples = len(AppleStats.apples)
         self.applecount = self.maxapples
-        self.runstarttime = now
+        self.runTime = 0
         
         self.score = [0, 0]
 
@@ -188,6 +193,8 @@ class Game(state_machine.State):
 
     def update(self, keys, now, dt):
         self.now = now
+        if dt < 100:
+            self.runTime += dt
         self.elements.update(now, keys, self, dt)
 
     def draw(self, surface, interpolate):
@@ -212,7 +219,11 @@ class Game(state_machine.State):
         elif event.type == pg.KEYUP:
             self.keys = pg.key.get_pressed()
             self.elements.get_keys(self.keys)
-        self.camera.get_event(event)            
+        elif event.type == RESET_GAME:
+            self.persist['Score'] = self.score
+        
+        self.camera.get_event(event)      
+
 
 
 class Paused(state_machine.State):
@@ -252,15 +263,18 @@ class Winscreen(state_machine.State):
     def __init__(self):
         state_machine.State.__init__(self)
         self.elements = self.make_elements()
+        self.Higscoretext = WinscreenBuilder.HighscoreText()
+        self.score = [0, 0]
 
     def startup(self, now, persistant):
         self.persist = persistant
+        self.score = self.persist['Score']
         self.start_time = now
 
     def make_elements(self):
         group = pg.sprite.LayeredUpdates()
-        group.add(WinscreenBuilder.RestartButton(), layer=1)
-        group.add(WinscreenBuilder.WinText(), layer=2)
+        group.add(WinscreenBuilder.WinText(), layer=1)
+        group.add(WinscreenBuilder.RestartButton(), layer=2)
         return group
 
     def update(self, keys, now, dt):
@@ -271,9 +285,26 @@ class Winscreen(state_machine.State):
     def draw(self, surface, interpolate):
         surface.fill((50, 100, 200))
         self.elements.draw(surface)
+        
+        #Score Display
+        font = pg.font.Font(FONT_PATH, 50)
+        scoretext = font.render("Time: " + str(self.score[0]) + ":" + f'{round(self.score[1]):03}', False, pg.Color("white"))
+        rect = scoretext.get_rect()
+        surface.blit(scoretext, (640 - (rect.width/2), 355 - rect.height/2))
+
+        #Highscore Display
+        saveRead = open("AppleGame.save", "r")
+        save = json.load(saveRead)
+        saveRead.close()
+        highscoreText = font.render("Highscore: " + str(save["Score"][0]) + ":" + f'{round(save["Score"][1]):03}', False, pg.Color("white"))
+        rect = highscoreText.get_rect()
+        surface.blit(highscoreText, (640 - (rect.width/2), 365 + rect.height/2))
+
+        if(save["Score"] == self.score):
+            self.Higscoretext.draw(surface)
 
     def get_event(self, event):
-        for sprite in self.elements.get_sprites_from_layer(1):
+        for sprite in self.elements.get_sprites_from_layer(2):
             sprite.get_event(event)
 
         if event.type == RESET_GAME:
