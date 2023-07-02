@@ -139,7 +139,7 @@ class MainMenu(state_machine.State):
 
     def make_elements(self):
         group = pg.sprite.LayeredUpdates()
-        group.add(MainMenuBuilder.AnyKey(), MainMenuBuilder.TitleImage(), layer=1)
+        group.add(MainMenuBuilder.TitleImage(), MainMenuBuilder.AnyKey(), MainMenuBuilder.AppleGlow(), MainMenuBuilder.Apple(), MainMenuBuilder.Player(), layer=1)
         return group
 
     def update(self, keys, now, dt):

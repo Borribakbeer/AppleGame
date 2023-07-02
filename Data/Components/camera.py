@@ -13,6 +13,9 @@ class Camera(object):
         self.objects = CameraRenderGroup()
         self.ground = CameraRenderGroup(False)
 
+        self.postprocessing = pg.sprite.LayeredUpdates()
+        self.postprocessing.add(Vignette(), layer=1)
+
     def draw_frame(self, surface, objectsCollection):
         if self.player:
             self.position = self.player.worldposition
@@ -31,6 +34,7 @@ class Camera(object):
         #Render order: (1 tilemaps, 2 un-y-sorted ground, 3 y-sorted objects)
         self.ground.custom_draw(surface)
         self.objects.custom_draw(surface)
+        self.postprocessing.draw(surface)
 
     def set_objects_world_to_screen_space(self, objects):
         for obj in objects:                
@@ -91,3 +95,10 @@ class CameraRenderGroup(pg.sprite.Group):
                 if sprite.draw(surface):
                     self.remove(sprite)
         
+
+class Vignette(pg.sprite.Sprite):
+    def __init__(self, *groups):
+        pg.sprite.Sprite.__init__(self, *groups)
+        self.image = rc.GFX["Misc"]["Vignette"]
+
+        self.rect = rc.SCREEN_RECT
