@@ -26,7 +26,7 @@ def set_camera_zoom(zoom):
     UNIT_SCALE = round(SCREEN_SIZE[1] / CAMERA_ZOOM)
 
 PIXELSCALE_IMAGES = 16
-ORIGINAL_CAPTION = "The Apple Game"
+ORIGINAL_CAPTION = "Apple Colector: Rise of the Wizard"
 SCREEN_RECT = pg.Rect((0, 0), SCREEN_SIZE)
 FONT_PATH = os.path.join("Resources", "Fonts", "Fixedsys500c.ttf")
 BIG_FONT = pg.font.Font(FONT_PATH, 100)
@@ -88,7 +88,7 @@ _SOUND_SUB_DIRECTORIES = ["SFX"]
 SFX = sounds_from_directories(_SOUND_SUB_DIRECTORIES)
 
 MUSIC_PATHS = ["GerudoValley", "MasterKohga", "FallGuys", "Celeste", "TalusBattle"]
-
+MUTED_MUSIC = True
 
 import Utils.WorldData as WorldData
 

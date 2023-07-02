@@ -7,7 +7,7 @@ import ResourceManager as rc
 
 class Camera(object):
     def __init__(self):
-        self.position = pg.math.Vector2()
+        self.position = pg.math.Vector2(-20, 10)
         self.player = None
         self.velocity = pg.math.Vector2()
         self.objects = CameraRenderGroup()
@@ -55,10 +55,7 @@ class Camera(object):
                 self.objects.add(obj)
 
     def get_event(self, event):
-        if event.type == pg.MOUSEWHEEL:
-            print(event.y)
-            rc.set_camera_zoom(rc.CAMERA_ZOOM + event.y * 0.5)
-
+        pass
 
 
     def world_to_screen_space(self, coords):

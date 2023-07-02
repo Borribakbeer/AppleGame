@@ -1,9 +1,11 @@
 import pygame as pg
-from ResourceManager import *
+import ResourceManager
 
 class SoundPlayer():
-    def __init__(self):
+    def __init__(self, Gameinfo):
+        self.Game = Gameinfo
         pass
         
     def PlaySound(self, name):
-        pg.mixer.Sound.play(SFX["SFX"][name])
+        if not ResourceManager.MUTED_MUSIC:
+            pg.mixer.Sound.play(ResourceManager.SFX["SFX"][name])

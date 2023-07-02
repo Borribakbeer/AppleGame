@@ -44,6 +44,7 @@ class AppleCreator():
 
 
         if(GameInfo.applecount == 0):
+            GameInfo.next = "Winscreen"
             pg.event.post(pg.event.Event(RESET_GAME))
 
 

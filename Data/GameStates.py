@@ -5,6 +5,7 @@ from Utils import state_machine, Tools, ParentComponents
 from StateBuilders import MainMenuBuilder, GameBuilder, PausedBuilder, WinscreenBuilder
 from Stats import AppleStats
 from ResourceManager import *
+import ResourceManager
 from Components import camera, UIDrawer, SoundPlayer
 import json
 
@@ -20,7 +21,7 @@ class GameController(object):
         self.caption = caption
         self.done = False
         self.clock = pg.time.Clock()
-        self.fps = 30.0
+        self.fps = 60.0
         self.fps_visible = True
         self.now = 0.0
         self.keys = pg.key.get_pressed()
@@ -32,6 +33,8 @@ class GameController(object):
         pg.mixer.music.play()
         del self.musicqueue[randomIndex]
         pg.mixer.music.set_endevent(ENDING_MUSIC)
+        if ResourceManager.MUTED_MUSIC:
+            pg.mixer.music.pause()
 
     def update(self, dt):
         # Updates the currently active state.
@@ -58,6 +61,14 @@ class GameController(object):
             elif event.type == pg.KEYDOWN:
                 self.keys = pg.key.get_pressed()
                 self.toggle_show_fps(event.key)
+                if self.keys[pg.K_m]:
+                    if ResourceManager.MUTED_MUSIC:
+                        ResourceManager.MUTED_MUSIC = False
+                        pg.mixer.music.unpause()
+                    else:
+                        ResourceManager.MUTED_MUSIC = True
+                        pg.mixer.music.pause()
+
             elif event.type == pg.KEYUP:
                 self.keys = pg.key.get_pressed()
             # Reset game
@@ -73,7 +84,6 @@ class GameController(object):
                     f.close()
                 self.state_machine.state_dict["Game"] = Game(self.now)
                 game.done = True
-                game.next = "Game"
 
             if event.type == ENDING_MUSIC:
                 self.QueueMusic()
@@ -155,7 +165,7 @@ class Game(state_machine.State):
         state_machine.State.__init__(self)
         self.camera = camera.Camera()
         self.uibuilder = UIDrawer.UIDrawer()
-        self.soundplayer = SoundPlayer.SoundPlayer()
+        self.soundplayer = SoundPlayer.SoundPlayer(self)
         self.elements = GameBuilder.make_elements(self.camera)
         self.colliders = []
         for collider in self.elements.get_objects():
@@ -196,15 +206,13 @@ class Game(state_machine.State):
                 
             if(self.keys[pg.K_r]):
                 pg.event.post(pg.event.Event(RESET_GAME))
+                self.next = "Game"
+                self.done = True
 
         elif event.type == pg.KEYUP:
             self.keys = pg.key.get_pressed()
             self.elements.get_keys(self.keys)
-        self.camera.get_event(event)
-        
-        if(event.type == RESET_GAME):
-            self.next = "Winscreen"
-            self.done = True
+        self.camera.get_event(event)            
 
 
 class Paused(state_machine.State):
