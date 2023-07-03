@@ -88,7 +88,7 @@ _SOUND_SUB_DIRECTORIES = ["SFX"]
 SFX = sounds_from_directories(_SOUND_SUB_DIRECTORIES)
 
 MUSIC_PATHS = ["GerudoValley", "MasterKohga", "FallGuys", "Celeste", "TalusBattle"]
-MUTED_MUSIC = True
+MUTED_MUSIC = False
 
 import Utils.WorldData as WorldData
 

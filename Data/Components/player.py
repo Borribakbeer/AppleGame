@@ -36,12 +36,11 @@ class Player(pc.GameObject, pc.Rigidbody):
             offsetY = math.sin(self.bobtime * PlayerStats.Bobspeed) * PlayerStats.Bobamount
         else:
             self.bobbin = False
-        print(self.bobtime)
         self.offset = pg.Vector2(offsetX, offsetY)
         self.screenposition += self.offset
         pc.GameObject.draw(self, surface)
 
-
+ 
     def get_key(self, receivedKeys):
         self.keys = receivedKeys
         self.velocity = pg.Vector2(0, 0)

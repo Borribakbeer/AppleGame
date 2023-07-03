@@ -42,8 +42,6 @@ class Apple(pc.GameObject):
         pc.GameObject.draw(self, surface)
 
     def get_key(self, receivedKeys):
-        if receivedKeys[pg.K_SPACE]:
-            self.collected = True
         return super().get_key(receivedKeys)
 
         

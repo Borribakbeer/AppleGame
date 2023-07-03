@@ -36,6 +36,6 @@ class TileSet:
         jsonFile = json.load(file)
         path = jsonFile['image']
         path = path.replace('../../','')
-        print(path)
+        print("Loaded tilemap: " + path)
         return os.path.join("Resources", path)
         
